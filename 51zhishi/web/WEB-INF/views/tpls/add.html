@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="/tpls/plane-template::header('首页')">
+    <i th:fragment="top">
+        <script src="/framework/jquery.js"></script>
+        <script src="/framework/bootstrap.js"></script>
+        <link rel="stylesheet" href="/css/bootstrap.css">
+    </i>
+</head>
+<body>
+    <div th:include="/tpls/plane-template::top_menu" th:remove="tag"></div>
+    <h4>成功导入t_student数据库</h4>
+</body>
+</html>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="header(title)">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title th:text="'系统管理--'+${title}"></title>
+    <!--<link rel="short icon" href="../../../image/favicon-16.ico" th:href="@{/image/favicon-16.ico}">-->
+    <link rel="stylesheet" th:href="@{/css/normalize.css}">
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/site.css}">
+    <link rel="stylesheet" th:href="@{/css/fontawesome/web-fonts-with-css/css/fontawesome-all.css}">
+    <link rel="stylesheet" th:href="@{/css/plane.css?ver=1.0.1}">
+    <i th:fragment="top" th:remove="tag"></i>
+</head>
+<body>
+    <div th:fragment="top_menu" th:remove="tag">
+        <!-- Fixed navbar -->
+        <nav class="navbar navbar-inverse navbar-fixed-top">
+            <div class="container-fluid">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="/">系统管理</a>
+                </div>
+                <div class="collapse navbar-collapse"  id="bs-example-navbar-collapse-1">
+                    <ul class="nav navbar-nav" id="plane-list">
+                        <li class="active"><a href="/"><i class="fas fa-fw fa-home"></i> 首 页</a></li>
+                        <li><a href="/doors/list"><i class="fas fa-fw fa-cogs"></i> DOORS</a></li>
+                        <li><a href="/user/list"><i class="far fa-fw fa-user"></i> 用户管理</a></li>
+                        <li><a href="/prod/list"><i class="fas fa-list-ul"></i> 产品结构</a></li>
+                        <li><a href="/pbs/list"><i class="fab fa-discourse"></i> PBS</a></li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="/auth/logout"><i class="fas fa-fw fa-sign-out-alt"></i> 退出</a></li>
+                    </ul>
+                </div>
+            </div><!-- /.container-fluid -->
+        </nav>
+    </div>
+    <div th:fragment="footer" th:remove="tag">
+        <script type="text/javascript" th:src="@{/framework/jquery.js}"></script>
+        <script type="text/javascript" th:src="@{/framework/bootstrap.js}"></script>
+        <script type="text/javascript" th:src="@{/framework/underscore-min.js}"></script>
+    </div>
+</body>
+</html>

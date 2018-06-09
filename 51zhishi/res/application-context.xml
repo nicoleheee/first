@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+						http://www.springframework.org/schema/beans/spring-beans.xsd
+						http://www.springframework.org/schema/context
+						http://www.springframework.org/schema/context/spring-context.xsd
+						http://www.springframework.org/schema/tx
+						http://www.springframework.org/schema/tx/spring-tx.xsd
+						http://www.springframework.org/schema/aop 
+						http://www.springframework.org/schema/aop/spring-aop.xsd
+						http://www.springframework.org/schema/task
+						http://www.springframework.org/schema/task/spring-task.xsd
+	  					"
+	 >
+	<!-- 读取数据库配置文件，获取基于特定于主机的配置属性 -->
+	<bean id="propertyConfigurer"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:jdbc.properties</value>
+				<value>classpath:sendmail.properties</value>
+				<value>classpath:upload.properties</value>
+				<value>classpath:rsaautograph.properties</value>
+			</list>
+		</property>
+		<property name="ignoreUnresolvablePlaceholders" value="true" />
+	</bean>
+    <!--加载签名的数据-->
+	<bean id="getSignDate" class="com.plane.web.vo.SignData">
+        <property name="modulus" value="${modulus}"/>
+		<property name="publicExponent" value="${publicExponent}"/>
+		<property name="privateExponent" value="${privateExponent}"/>
+	</bean>
+
+
+	<!-- 数据源  参数来自上面的配置文件
+
+	 其实，也叫数据库连接池（数据源表示），此处是一个比较著名的数据库连接池c3p0
+	 -->
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+		<property name="driverClass" value="${jdbc.driverClassName}" />
+		<property name="jdbcUrl" value="${jdbc.url}" />
+		<property name="user" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+		<property name="minPoolSize" value="1" />
+		<!--最大是25个连接 -->
+        <property name="maxPoolSize" value="25" />   
+        <property name="initialPoolSize" value="1" />   
+        <property name="maxIdleTime" value="0" />   
+        <property name="acquireIncrement" value="5" />   
+        <property name="maxStatements" value="5000" />   
+        <property name="idleConnectionTestPeriod" value="60" />   
+        <property name="acquireRetryAttempts" value="30" />   
+        <property name="breakAfterAcquireFailure" value="false" />   
+        <property name="testConnectionOnCheckout" value="false" />     
+		<property name="testConnectionOnCheckin" value="true" />   		
+	</bean>
+	
+	<!-- session -->
+ 	<!--<bean id="sessionFactory"-->
+		<!--class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">-->
+		<!--<property name="dataSource" ref="dataSource" />-->
+		<!--<property name="packagesToScan">   -->
+   			<!--<list>   -->
+   				<!--&lt;!&ndash; 扫描实体类，也就是平时所说的model &ndash;&gt;  -->
+   		 		<!--<value>com.potevio.pojo</value> -->
+   			<!--</list>   -->
+    	<!--</property>  	-->
+		<!--<property name="hibernateProperties">  -->
+         <!--<props>  -->
+            <!--<prop key="connection.useUnicode">true</prop>  -->
+            <!--<prop key="connection.characterEncoding">utf-8</prop>  -->
+            <!--<prop key="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</prop>  -->
+            <!--<prop key="hibernate.show_sql">false</prop>  -->
+            <!--<prop key="hibernate.jdbc.batch_size">50</prop>-->
+            <!--<prop key="hibernate.hbm2ddl.auto">update</prop>-->
+         <!--</props>  -->
+       	<!--</property>  		-->
+	<!--</bean>-->
+		
+	<!-- spring Hibernate事务管理器 -->
+	<!--<bean id="transactionManager"
+		class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="dataSource" ref="dataSource" /> 
+	</bean>	-->
+
+	<!-- JDBC的事务管理器 -->
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+	<!--mybatis配置-->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"/>
+		<property name="typeAliasesPackage" value="com.plane.entity"/>
+		<property name="configuration">
+			<bean class="org.apache.ibatis.session.Configuration">
+				<!-- 将数据库带下划线的字段,转为驼峰结构属性名-->
+				<property name="mapUnderscoreToCamelCase" value="true"/>
+			</bean>
+		</property>
+		<property name="plugins">
+			<array>
+				<bean class="com.github.pagehelper.PageInterceptor">
+					<property name="properties">
+					<value>
+					helperDialect=mysql
+					</value>
+					</property>
+				</bean>
+			</array>
+		</property>
+	</bean>
+
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.plane.mapper"/>
+	</bean>
+
+    <!--文件上传-->
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"/>
+	<!-- 基于注解方式的依赖注入 -->
+ 	<bean
+		class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor" />
+
+	<!--spring自带定时器-->
+	<!--<task:annotation-driven />-->
+	<!--<task:scheduled-tasks>
+		<task:scheduled ref="intervalSendEmail" method="sendEmail" cron="${cron1}" />
+
+		<task:scheduled ref="intervalSendEmail" method="modifyQAEed" cron="${cron2}" />
+
+		<task:scheduled ref="intervalSendEmail" method="delTemporaryImg" cron="${cron3}" />
+		&lt;!&ndash;问题结束7天后 自动添加提问者方案&ndash;&gt;
+		<task:scheduled ref="commissionTask" method="addCommissionByPlan" cron="${cronDay}" />
+		&lt;!&ndash;添加最终分配方案&ndash;&gt;
+		<task:scheduled ref="commissionTask" method="endAnswerPlan" cron="${cronDay}" />
+		&lt;!&ndash;添加私人问题结算&ndash;&gt;
+		<task:scheduled ref="commissionTask" method="endPriveteQa" cron="${cronDay}" />
+	</task:scheduled-tasks>-->
+	<!--使用注解驱动，抛弃了之前的拦截器或AOP配置 -->
+ 	<tx:annotation-driven transaction-manager="transactionManager" />
+ 	<tx:annotation-driven mode="aspectj"/>
+    <aop:aspectj-autoproxy/>
+
+
+	<!--&lt;!&ndash;不同环境读取不同配置&ndash;&gt;
+	<beans profile="develope">
+		<context:property-placeholder location="classpath*:wechat.properties" ignore-unresolvable="true"  />
+		<context:property-placeholder location="classpath*:alipay.properties" ignore-unresolvable="true"  />
+		<context:property-placeholder location="classpath*:jAccount_dev.properties" ignore-unresolvable="true"  />
+		&lt;!&ndash;微信配置数据&ndash;&gt;
+		<bean  class="com.i51zhishi.web.wechat.wechatConfig"   >
+			<property name="appid" value="${wechat.app.id}"/>
+			<property name="appsecret" value="${wechat.app.secret}"/>
+			<property name="partner" value="${wechat.partner}"/>
+			<property name="partnerkey" value="${wechat.partner.key}"/>
+			<property name="payurl" value="${wechat.pay.url}"/>
+			<property name="sendurl" value="${wechat.send.url}"/>
+			<property name="resulturl" value="${wechat.result.url}"/>
+			<property name="certLocalPath" value="${wechat.cert.Local.Path}"/>
+			<property name="access_token_url" value="${wechat.access.token.url}"/>
+			<property name="wx_user_url" value="${wechat.wx.user.url}"/>
+			<property name="log_appid" value="${wechat.login.app.id}"/>
+			<property name="log_appkey" value="${wechat.login.app.key}"/>
+
+			<property name="payType" value="${wechat.pay.type}"/>
+			<property name="log_redirect_url" value="${wechat.login.redirect.url}"/>
+			<property name="log_css_url" value="${wechat.login.css.url}"/>
+			<property name="notifyurl" value="${wechat.notify.url}"/>
+			<property name="notifyurl_prod" value="${wechat.notify.url.prod}"/>
+		</bean>
+
+		&lt;!&ndash;支付宝支付配置数据&ndash;&gt;
+		<bean class="com.i51zhishi.web.alipay.AlipayConfig" >
+			<property name="partner" value="${ali.partner}"/>
+			<property name="URL" value="${ali.URL}"/>
+			<property name="app_id" value="${ali.app.id}"/>
+			<property name="app_private_key" value="${ali.app.private.key}"/>
+			<property name="format" value="${ali.format}"/>
+			<property name="charset" value="${ali.charset}"/>
+			<property name="alipay_public_key" value="${ali.alipay.public.key}"/>
+			<property name="sign_type" value="${ali.sign.type}"/>
+
+			<property name="notify_url" value="${ali.notify_url}"/>
+			<property name="return_url" value="${ali.return_url}"/>
+			<property name="notify_url_prod" value="${ali.notify_url.prod}"/>
+			<property name="return_url_prod" value="${ali.return_url.prod}"/>
+
+		</bean>
+
+		&lt;!&ndash;jaccount&ndash;&gt;
+		<bean  class="com.i51zhishi.web.jaccount.jAccountConfig">
+			<property name="clientId" value="${clientId}"/>
+			<property name="secretKey" value="${secretKey}"/>
+			<property name="tokenLocation" value="${tokenLocation}"/>
+			<property name="redirectUrl" value="${redirectUrl}"/>
+			<property name="authorizationLocation" value="${authorizationLocation}"/>
+			<property name="profileUrl" value="${profileUrl}"/>
+			<property name="logout" value="${logout}"/>
+			<property name="url" value="${url}"/>
+		</bean>
+	</beans>
+
+	<beans profile="online">
+		<context:property-placeholder location="classpath*:wechat-online.properties" ignore-unresolvable="true"  />
+		<context:property-placeholder location="classpath*:alipay-online.properties" ignore-unresolvable="true"  />
+		<context:property-placeholder location="classpath*:jAccount_online.properties" ignore-unresolvable="true"  />
+		&lt;!&ndash;微信配置数据&ndash;&gt;
+		<bean   class="com.i51zhishi.web.wechat.wechatConfig"   >
+			<property name="appid" value="${wechat.app.id}"/>
+			<property name="appsecret" value="${wechat.app.secret}"/>
+			<property name="partner" value="${wechat.partner}"/>
+			<property name="partnerkey" value="${wechat.partner.key}"/>
+			<property name="payurl" value="${wechat.pay.url}"/>
+			<property name="sendurl" value="${wechat.send.url}"/>
+			<property name="resulturl" value="${wechat.result.url}"/>
+			<property name="certLocalPath" value="${wechat.cert.Local.Path}"/>
+			<property name="access_token_url" value="${wechat.access.token.url}"/>
+			<property name="wx_user_url" value="${wechat.wx.user.url}"/>
+			<property name="log_appid" value="${wechat.login.app.id}"/>
+			<property name="log_appkey" value="${wechat.login.app.key}"/>
+
+			<property name="payType" value="${wechat.pay.type}"/>
+			<property name="log_redirect_url" value="${wechat.login.redirect.url}"/>
+			<property name="log_css_url" value="${wechat.login.css.url}"/>
+			<property name="notifyurl" value="${wechat.notify.url}"/>
+			<property name="notifyurl_prod" value="${wechat.notify.url.prod}"/>
+		</bean>
+		&lt;!&ndash;支付宝支付配置数据&ndash;&gt;
+		<bean  class="com.i51zhishi.web.alipay.AlipayConfig" >
+			<property name="partner" value="${ali.partner}"/>
+			<property name="URL" value="${ali.URL}"/>
+			<property name="app_id" value="${ali.app.id}"/>
+			<property name="app_private_key" value="${ali.app.private.key}"/>
+			<property name="format" value="${ali.format}"/>
+			<property name="charset" value="${ali.charset}"/>
+			<property name="alipay_public_key" value="${ali.alipay.public.key}"/>
+			<property name="sign_type" value="${ali.sign.type}"/>
+
+			<property name="notify_url" value="${ali.notify_url}"/>
+			<property name="return_url" value="${ali.return_url}"/>
+			<property name="notify_url_prod" value="${ali.notify_url.prod}"/>
+			<property name="return_url_prod" value="${ali.return_url.prod}"/>
+		</bean>
+
+		&lt;!&ndash;jaccount&ndash;&gt;
+		<bean  class="com.i51zhishi.web.jaccount.jAccountConfig">
+			<property name="clientId" value="${clientId}"/>
+			<property name="secretKey" value="${secretKey}"/>
+			<property name="tokenLocation" value="${tokenLocation}"/>
+			<property name="redirectUrl" value="${redirectUrl}"/>
+			<property name="authorizationLocation" value="${authorizationLocation}"/>
+			<property name="profileUrl" value="${profileUrl}"/>
+			<property name="logout" value="${logout}"/>
+			<property name="url" value="${url}"/>
+		</bean>
+	</beans>
+
+	<beans profile="location">
+		<context:property-placeholder location="classpath*:wechat.properties" ignore-unresolvable="true"  />
+		<context:property-placeholder location="classpath*:alipay.properties" ignore-unresolvable="true"  />
+		<context:property-placeholder location="classpath*:jAccount_localhost.properties" ignore-unresolvable="true"  />
+		&lt;!&ndash;微信配置数据&ndash;&gt;
+		<bean id="wechatConfig" class="com.i51zhishi.web.wechat.wechatConfig"   >
+			<property name="appid" value="${wechat.app.id}"/>
+			<property name="appsecret" value="${wechat.app.secret}"/>
+			<property name="partner" value="${wechat.partner}"/>
+			<property name="partnerkey" value="${wechat.partner.key}"/>
+			<property name="payurl" value="${wechat.pay.url}"/>
+			<property name="sendurl" value="${wechat.send.url}"/>
+			<property name="resulturl" value="${wechat.result.url}"/>
+			<property name="certLocalPath" value="${wechat.cert.Local.Path}"/>
+			<property name="access_token_url" value="${wechat.access.token.url}"/>
+			<property name="wx_user_url" value="${wechat.wx.user.url}"/>
+			<property name="log_appid" value="${wechat.login.app.id}"/>
+			<property name="log_appkey" value="${wechat.login.app.key}"/>
+
+			<property name="payType" value="${wechat.pay.type}"/>
+			<property name="log_redirect_url" value="${wechat.login.redirect.url}"/>
+			<property name="log_css_url" value="${wechat.login.css.url}"/>
+			<property name="notifyurl" value="${wechat.notify.url}"/>
+			<property name="notifyurl_prod" value="${wechat.notify.url.prod}"/>
+		</bean>
+		&lt;!&ndash;支付宝支付配置数据&ndash;&gt;
+		<bean  class="com.i51zhishi.web.alipay.AlipayConfig" >
+			<property name="partner" value="${ali.partner}"/>
+			<property name="URL" value="${ali.URL}"/>
+			<property name="app_id" value="${ali.app.id}"/>
+			<property name="app_private_key" value="${ali.app.private.key}"/>
+			<property name="format" value="${ali.format}"/>
+			<property name="charset" value="${ali.charset}"/>
+			<property name="alipay_public_key" value="${ali.alipay.public.key}"/>
+			<property name="sign_type" value="${ali.sign.type}"/>
+
+			<property name="notify_url" value="${ali.notify_url}"/>
+			<property name="return_url" value="${ali.return_url}"/>
+			<property name="notify_url_prod" value="${ali.notify_url.prod}"/>
+			<property name="return_url_prod" value="${ali.return_url.prod}"/>
+		</bean>
+
+		&lt;!&ndash;jaccount&ndash;&gt;
+		<bean  class="com.i51zhishi.web.jaccount.jAccountConfig">
+			<property name="clientId" value="${clientId}"/>
+			<property name="secretKey" value="${secretKey}"/>
+			<property name="tokenLocation" value="${tokenLocation}"/>
+			<property name="redirectUrl" value="${redirectUrl}"/>
+			<property name="authorizationLocation" value="${authorizationLocation}"/>
+			<property name="profileUrl" value="${profileUrl}"/>
+			<property name="logout" value="${logout}"/>
+			<property name="url" value="${url}"/>
+		</bean>
+	</beans>-->
+
+
+
+</beans>

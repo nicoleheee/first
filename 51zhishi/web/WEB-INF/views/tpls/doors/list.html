@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="/tpls/plane-template::header('DOORS列表')">
+    <i th:fragment="top">
+        <style type="text/css">
+            td{
+                border-bottom: 1px solid #eee;
+            }
+        </style>
+    </i>
+</head>
+<body>
+    <div th:include="/tpls/plane-template::top_menu" th:remove="tag"></div>
+    <div class="container-fluid main-wrapper" >
+        <div class="row">
+            <div class="col-lg-offset-1 col-lg-10">
+                <ol class="breadcrumb" th:if="${!#lists.isEmpty(navigationDoors)}">
+                    <li ><a href="/doors/list?parentId=0">DOORS</a></li>
+                    <th:block   th:each="navi:${navigationDoors}">
+                        <li><a th:href="${'/doors/list?parentId='+navi.id}" th:utext="${navi.title}">DOORS</a></li>
+                    </th:block>
+                </ol>
+            </div>
+        </div>
+        <div class="row" th:if="${doors!=null}">
+            <div class="col-lg-offset-1 col-lg-10">
+                <div class="panel panel-default">
+
+                    <div class="panel-heading">
+                        <span >DOORS信息</span>
+                    </div>
+
+                    <div class="panel-body">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>标题</th>
+                                    <th>版本号</th>
+                                    <th>创建者</th>
+                                    <th>时间</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td th:utext="${doors.title}"></td>
+                                    <td th:utext="${doors.version}">1</td>
+                                    <td th:utext="${doors.userName}">1</td>
+                                    <td th:text="${#dates.format(doors.createTime,'yyyy-MM-dd HH:mm')}">1</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                 </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-offset-1 col-lg-10">
+                <div class="panel panel-default">
+
+                    <div class="panel-heading">
+                        <h3>
+                            <span th:utext="${doors==null?'DOORS列表':'DOORS子列表'}"></span>
+                            <a id="open_doors" class="pull-right btn btn-info">添加</a>
+                        </h3>
+                    </div>
+
+                    <div class="panel-body">
+                        <!--表单查询-->
+                        <form action="/doors/list" method="get">
+                            <div class="form-group" style="margin-bottom: 30px">
+                                <input type="text" hidden name="parentId" th:value="${doorsFileVO.parentId}">
+                                <span class="col-xs-offset-1 col-xs-2"
+                                      style="line-height: 35px;text-align: right">标题&nbsp;:&nbsp;</span>
+                                <span class="col-xs-5">
+                                    <input type="text" name="queryTitle" th:value="${doorsFileVO.queryTitle}" class="form-control" placeholder="输入标题查询">
+                                </span>
+                                <input type="submit" class="btn btn-primary" id="search" value="查询">
+                            </div>
+                        </form>
+                        <table class="table table-hover table-striped">
+                            <thead>
+                                <tr>
+                                    <th>序号</th>
+                                    <th >
+                                        <a title="按标题排序" th:classappend="${doorsFileVO.sort=='title'?'active':''}">标题&nbsp;<i th:attr="data-value=${doorsFileVO.sort=='title'?(doorsFileVO.order=='desc'?'asc':'desc'):'desc'}"
+                                                   th:classappend="${doorsFileVO.sort=='title'?(doorsFileVO.order=='desc'?'fa-arrow-up':'fa-arrow-down'):'fa-arrow-down'}"
+                                                   class="fa" data-name="title" aria-hidden="true"></i></a></th>
+                                    <th >
+                                        <a title="按版本号排序" th:classappend="${doorsFileVO.sort=='version'?'active':''}">版本号&nbsp;<i th:attr="data-value=${doorsFileVO.sort=='version'?(doorsFileVO.order=='desc'?'asc':'desc'):'desc'}"
+                                                    th:classappend="${doorsFileVO.sort=='version'?(doorsFileVO.order=='desc'?'fa-arrow-up':'fa-arrow-down'):'fa-arrow-down'}"
+                                                    class="fa" data-name="version" aria-hidden="true"></i></a></th>
+                                    <th >
+                                        <a title="按创建者排序" th:classappend="${doorsFileVO.sort=='creatorId'?'active':''}">创建者&nbsp;<i th:attr="data-value=${doorsFileVO.sort=='creatorId'?(doorsFileVO.order=='desc'?'asc':'desc'):'desc'}"
+                                                    th:classappend="${doorsFileVO.sort=='creatorId'?(doorsFileVO.order=='desc'?'fa-arrow-up':'fa-arrow-down'):'fa-arrow-down'}"
+                                                    class="fa" data-name="creatorId" aria-hidden="true"></i></a></th>
+                                    <th >
+                                        <a title="按创建日期排序" th:classappend="${doorsFileVO.sort=='create_time'?'active':''}">创建日期&nbsp;<i th:attr="data-value=${doorsFileVO.sort=='create_time'?(doorsFileVO.order=='desc'?'asc':'desc'):'desc'}"
+                                                   th:classappend="${doorsFileVO.sort=='create_time'?(doorsFileVO.order=='desc'?'fa-arrow-up':'fa-arrow-down'):'fa-arrow-down'}"
+                                                   class="fa" data-name="create_time" aria-hidden="true"></i></a></th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:if="${!#lists.isEmpty(doorsList)}" th:each="doors,doorsStr:${doorsList}">
+                                    <td th:text="${doorsStr.index+1}"></td>
+                                    <td ><a  th:href="${'/doors/list?parentId='+doors.id}" th:utext="${doors.title}"></a></td>
+                                    <td th:utext="${doors.version}">1</td>
+                                    <td th:utext="${doors.userName}">1</td>
+                                    <td th:text="${#dates.format(doors.createTime,'yyyy-MM-dd HH:mm')}">1</td>
+                                    <td>
+                                        <a th:href="${'/doors/list?parentId='+doors.id}" class="btn btn-warning">分解</a>
+                                        <a th:attr="data-id=${doors.id}" class="btn btn-success">编辑</a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div th:if="${#lists.isEmpty(doorsList)}" class="text-center">
+                            <span >暂无数据</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--添加的model-->
+    <div class="modal fade" id="doors_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+
+        <div class="modal-dialog">
+            <div class="modal-content" >
+                <div class="modal-body" >
+                    <div class="panel panel-default" style="margin-bottom: 0">
+                        <div class="panel-heading">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title" >添加DOORS</h4>
+                        </div>
+                        <div class="panel-body" >
+                            <form class="form-horizontal" action="">
+
+                                <div class="form-group">
+                                    <label class="col-lg-3 control-label" >标题:</label>
+                                    <div class="col-lg-9">
+                                        <textarea title="标题" name="" id="title" class="form-control"
+                                                   rows="6"></textarea>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-lg-3 control-label" >版本号:</label>
+                                    <div class="col-lg-9">
+                                        <input type="text" id="version" name="topic" class="form-control" >
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-lg-3 control-label" >父级DOORS:</label>
+                                    <div class="col-lg-9">
+                                        <input type="text" readonly="readonly" id="parent_id" class="form-control"
+                                               th:value="${doors!=null?doors.title:''}"
+                                               th:attr="data-id=${doors!=null?doors.id:0}">
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="modal-footer" >
+                        <button type="button" data-dismiss="modal" class="btn">关闭</button>
+                        <button type="button" id="save_doors" class="btn btn-primary">确认</button>
+                    </div>
+                </div><!-- /.modal-body -->
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+    <!--修改的model-->
+    <div class="modal fade" id="doors_modify_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+
+        <div class="modal-dialog">
+            <div class="modal-content" >
+                <div class="modal-body" >
+                    <div class="panel panel-default" style="margin-bottom: 0">
+                        <div class="panel-heading">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title" >修改DOORS</h4>
+                        </div>
+                        <div class="panel-body" >
+                            <form class="form-horizontal" action="">
+
+                                <div class="form-group">
+                                    <label class="col-lg-3 control-label" >标题:</label>
+                                    <div class="col-lg-9">
+                                        <textarea title="标题" name="" id="modify_title" class="form-control"
+                                                 rows="6"></textarea>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-lg-3 control-label" >版本号:</label>
+                                    <div class="col-lg-9">
+                                        <input type="text" id="modify_version" class="form-control" >
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-lg-3 control-label" >父级DOORS:</label>
+                                    <div class="col-lg-9">
+                                        <input type="text" readonly="readonly" id="modify_parent_id" class="form-control"
+                                               th:value="${doors!=null?doors.title:''}"
+                                               th:attr="data-id=${doors!=null?doors.id:0}">
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="modal-footer" >
+                        <button type="button" data-dismiss="modal" class="btn">关闭</button>
+                        <button type="button" id="save_modify_doors" class="btn btn-primary">修改</button>
+                    </div>
+                </div><!-- /.modal-body -->
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+    <script th:inline="javascript" >
+        /*[+
+         var doorsFileVO=[[${doorsFileVO}]];
+         +]*/
+    </script>
+    <div th:include="/tpls/plane-template::footer" th:remove="tag"></div>
+    <script type="text/javascript">
+        $(function(){
+            $('#plane-list').children().removeClass('active').eq(1).addClass('active');
+
+            $('#open_doors').click(function(){
+                $('#doors_modal').modal('show');
+            });
+
+            var doors={
+                id:'',
+                title:'',
+                version:'',
+                parentId:''
+            };
+            $('#save_doors').click(function(){
+                doors.title=$('#title').val();
+                doors.version=$('#version').val();
+                doors.parentId=$('#parent_id').attr('data-id');
+                if(doors.title.length==0){
+                    alert('标题不能为空');
+                    return
+                }
+                if(doors.version.length==0){
+                    alert('版本号不能为空');
+                    return
+                }
+                $.ajax({
+                    url:'/doors/add',
+                    data:doors,
+                    success:function(data){
+                        if(data.success){
+                            alert('添加成功');
+                            window.location.href='/doors/list'+doors.parentId!=null?'?parentId='+doors.parentId:'';
+                            return;
+                        }
+                        if(data.code==-2){
+                            alert('存在相同的标题');
+                            return
+                        }
+                        alert('添加失败');
+                    }
+                })
+            });
+
+            $('table').find('tr').find('td:last').find('a:eq(1)').click(function(){
+                $('#modify_title').val($(this).parent().parent().find('td:eq(1)').find('a').text());
+                $('#modify_version').val($(this).parent().parent().find('td:eq(2)').text());
+                doors.id=$(this).attr('data-id');
+                $('#doors_modify_modal').modal('show');
+            });
+
+            var urlTrans=function(key,value){
+                if (value != null && value.length != 0 && value != 'null') {
+                    return '&'+key+'='+value;
+                }
+                return '';
+            };
+            $('table').find('tr th').find('i').parent().click(function(){
+
+                window.location.href="/doors/list?parentId="+doorsFileVO.parentId+
+                    urlTrans('queryTitle',doorsFileVO.queryTitle)+
+                    urlTrans('order',$(this).children().attr('data-value'))+
+                    urlTrans('sort',$(this).children().attr('data-name'));
+            });
+
+            $('#save_modify_doors').click(function(){
+                doors.title=$('#modify_title').val();
+                doors.version=$('#modify_version').val();
+                doors.parentId=$('#parent_id').attr('data-id');
+                if(doors.title.length==0){
+                    alert('标题不能为空');
+                    return
+                }
+                if(doors.version.length==0){
+                    alert('版本号不能为空');
+                    return
+                }
+                $.ajax({
+                    url:'/doors/update',
+                    data:doors,
+                    success:function(data){
+                        if(data.success){
+                            alert('修改成功');
+                            window.location.href='/doors/list'+doors.parentId!=null?'?parentId='+doors.parentId:'';
+                            return;
+                        }
+                        if(data.code==-2){
+                            alert('存在相同的标题');
+                            return;
+                        }
+                        alert('修改失败');
+                    }
+                })
+            })
+
+
+        })
+    </script>
+</body>
+
+</html>

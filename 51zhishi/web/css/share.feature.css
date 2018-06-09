@@ -1,0 +1,37 @@
+.ftype-info{
+    margin-left: 0px;
+    margin-top: 5px;
+    padding:5px;
+    line-height: 24px;
+    clear: right;
+
+}
+
+.btn-toggle{
+
+}
+.btn-toggle-active{
+    color: #fff;
+    background-color: #337ab7;
+    border-color: #2e6da4;
+}
+.btn-toggle-active:active:hover,
+.btn-toggle-active:active:focus,
+.btn-toggle-active:focus,.btn-toggle-active.focus{
+    color: #fff;
+    background-color: #286090;
+    border-color: #122b40;
+}
+
+.btn-toggle-active:hover,.btn-toggle-active.hover {
+    color: #fff;
+    background-color: #286090;
+    border-color: #204d74;
+}
+
+.btn-toggle-active:active,.btn-toggle-active.active{
+    color: #fff;
+    background-color: #286090;
+    border-color: #204d74;
+
+}

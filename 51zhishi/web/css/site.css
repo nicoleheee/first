@@ -1,0 +1,846 @@
+a{
+    color: #000;
+}
+a:hover{
+    text-decoration: none;
+}
+.top-menu-active,.topic-item-active, .i-answer a,.home-total,.home-prod-name{
+    color: #fc7104 !important;
+}
+.btn-orange,.btn-orange:hover,.btn-orange:active,.btn-orange:focus{
+    background-color: #fc7104 !important;
+    border: none;
+    color: white;
+}
+.auth-container-bg{
+    background-color: inherit !important;
+}
+.orange-text{
+    color: #fc7014;
+}
+.btn-simple-orange{
+    color: #fc7014 !important;
+    border: 1px solid #fc7014 !important;
+    /*padding: 3px;*/
+    display: inline-block;
+    border-radius: 5px;
+    margin-bottom: 5px;
+}
+.topic-span{
+    margin-right: 5px;
+    margin-bottom: 5px;
+}
+.topic-prod-span{
+    display: inline-block;
+}
+.i-answer{
+    display: inline-block;
+    border: 1px solid #fc7104;
+    color: #fc7104;
+    padding: 5px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+.i-answer-big{
+    display: block;
+    text-align: center;
+    font-size: 17px;
+    cursor: pointer;
+}
+.i-answer .qa-money{
+    border-right: 1px solid #fc7014;
+    padding-right: 10px;
+    margin-right: 5px;
+}
+.home-total{
+    font-size: 27px;
+}
+#top-menu-navbar a{
+    font-size: 18px;
+    color: black;
+    width: 125px;
+    text-align: center;
+}
+.soft-border{
+    border: 1px solid #eef1f1;
+    border-radius: 5px;
+}
+.brand-img{
+    padding-top: 1px;
+    padding-bottom: 1px;
+}
+.brand-img img{
+    height: 48px;
+}
+.lg-padding{
+    padding: 20px;
+}
+.md-padding{
+    padding: 5px 10px;
+}
+.topic-container{
+    padding-bottom: 15px;
+    padding-top: 15px;
+    margin-bottom: 25px;
+}
+.topic-qa-container{
+    padding: 0 20px;
+    margin-bottom: 30px;
+    box-shadow: 5px 5px 25px 0px rgba(46, 61, 73, 0.2);
+}
+.lg-box-shadow{
+    box-shadow: 5px 5px 25px 0px rgba(46, 61, 73, 0.2);
+}
+.header-border{
+    border-bottom: 1px solid #e6e6e6;
+}
+.header-more{
+    padding-top: 30px;
+}
+.header-more a{
+    color: black;
+}
+.qa-item-border,.similar_prod_item{
+    border-bottom: 1px solid #f3f3f3;
+}
+.home-qa-item{
+    margin-top: 15px;
+    padding-bottom: 15px;
+}
+.home-qa-item .topics-prods a{
+    color: #67686b;
+    margin-right: 10px;
+}
+.home-qa-item .qa-title a{
+    font-size: 18px;
+    color: black;
+    font-weight: 600;
+}
+.home-qa-item .qa-title{
+    margin-top: 10px;
+}
+.home-qa-item .qa-answer-view .num-total{
+    margin-right: 10px;
+}
+.statics-container{
+    padding-left: 30px;
+}
+.statics-table{
+    margin-top: 10px;
+    width: 100%;
+    margin-bottom: 10px;
+}
+.statics-table tbody tr td{
+    padding-bottom: 5px;
+}
+.btn-types .btn-active{
+    color: #fc7014;
+    border-bottom: 1px solid #fc7014;
+}
+.lg-orange-text{
+    font-size: 17px;
+    color: #fc7014;
+    padding: 10px;
+    display: block;
+    font-weight: 600;
+}
+.normal-text{
+    font-size: 15px;
+    color: #67686b;
+    display: inline-block;
+    padding: 0;
+}
+.home-prod-statics{
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+.footer-container{
+    padding-top: 40px;
+    padding-bottom: 20px;
+}
+.footer-container a,.footer-icp a{
+    color: #909193;
+}
+.footer-icp{
+    border-top: 1px solid #909193;
+    padding-top: 20px;
+    margin-bottom: 20px;
+}
+.top-user-avatar{
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+}
+.img-center{
+    margin-left: auto;
+    margin-right: auto;
+}
+.top-avatar-dropdown{
+    padding-top: 10px !important;
+    padding-bottom: 10px !important;
+}
+.discuss_item{
+    padding-top: 10px;
+}
+.uc-menu-active, .uc-menu-active:hover{
+    background-color: #fc7014 !important;
+    color: white !important;
+}
+.norm-margin{
+    margin-top: 15px;
+}
+.tip-relative,.inter-relative{
+    position: relative;
+}
+.abs-tip-msg{
+    position: absolute;
+    z-index: 999;
+    left: 0;
+    top:0;
+}
+.abs-tip-msg-right{
+    position: absolute;
+    z-index: 999;
+    right: 10px;
+    top:10px;
+}
+.error-msg{
+    color: red;
+}
+.abs-label-msg{
+    position: absolute;
+    z-index: 999;
+    left: 5px;
+    top:-2px;
+}
+
+.auth-wrapper{
+    background: url('../image/auth-bg.png');
+    min-height: 900px;
+}
+.auth-container{
+    background: #fff;
+    padding: 65px 30px;
+    opacity: 0.7;
+    border-radius: 5px;
+    margin-top: 50px;
+}
+.auth-header-container{
+    padding-bottom: 30px;
+}
+.auth-header{
+    font-size: 22px;
+    color: #000;
+    padding: 10px;
+}
+.page-title{
+    font-size: 23px;
+    color: #fc7014;
+    padding-top: 10px;
+    padding-bottom: 20px;
+}
+.auth-header-active{
+    color: #fc7014;
+    border-bottom: 1px solid #fc7014;
+}
+.input-interactive-active{
+    padding-top: 20px;
+}
+.orange-text-lg{
+    font-size: 18px;
+    padding: 10px 16px;
+    border-radius: 5px;
+}
+.login-codeimg{
+    height: 30px;
+    margin-top: 5px;
+}
+.refresh-codeimg{
+    display: block;
+    margin-top: 10px;
+}
+.qa-orderby-home{
+    border-bottom: 2px solid #eee;
+}
+.qa-orderby-home a{
+    display: block;
+    font-size: 17px;
+    color: #000;
+    padding-top: 5px;
+    padding-bottom: 10px;
+}
+.qa-orderby-home a:hover{
+    text-decoration: none;
+}
+.qa-orderby-home-active{
+    border-bottom-color: #fc7014;
+}
+/************************************问题广场 样式 开始**************************/
+.qa-list-item{
+    padding-top: 10px;
+    margin-bottom: 20px;
+    box-shadow: 5px 5px 25px 0px rgba(46, 61, 73, 0.2);
+}
+/*.qa-list-item:hover, .home-qa-item:hover{*/
+    /*box-shadow: 2px 4px 8px 0px rgba(46, 61, 73, 0.2);*/
+/*}*/
+.qa-list-item .qa-title, .qa-list-ing .qa-title, .qa-invite-list .qa-title{
+    font-size: 17px;
+    color: #000;
+    font-weight: 600;
+}
+.qa-list-item .qa-remarks{
+    position: relative;
+}
+.qa-list-item .qa-remarks p{
+    word-break: break-all;
+}
+.qa-list-item a.remarks-toggle{
+    position: absolute;
+    right: 25px;
+    bottom: -10px;
+    color: #67686b;
+    cursor: pointer;
+}
+.qa-list-item .qa-infos, .qa-list-item .qa-time{
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+.qa-list-item .qa-infos a,.qa-list-item .qa-views span{
+    margin-right: 10px;
+}
+.qa-list-item .qa-time .qa-progress{
+    position: relative;
+    height: 21px;
+    line-height: 21px;
+}
+.qa-list-item .qa-time .qa-progress .total{
+    width: 100%;
+    height: 5px;
+    background-color: #e6e6e6;
+    position: absolute;
+    top: 8px;
+}
+.qa-list-item .qa-time .qa-progress .done{
+    height:5px;
+    background-color: #fc7014;
+    position: absolute;
+    top: 8px;;
+}
+/************************************问题广场 样式 结束**************************/
+#first-level-topics{
+    max-height: 400px;
+    overflow-y: auto;
+}
+#second-level-topics{
+    overflow-y: auto;
+    max-height: 336px;
+}
+/*****************************************问题详情页面  开始************************/
+.qa-detail .qa-progress{
+    position: relative;
+    padding-top: 17px;
+}
+.qa-detail .qa-progress .total{
+    height: 10px;
+    background-color: #e6e6e6;
+}
+.qa-detail .qa-progress .done{
+    position: absolute;
+    height: 10px;
+    top: 17px;
+    left: 0;
+    background-color: #fc7014;
+}
+.qa-detail .qa-progress .flag{
+    position: absolute;
+    top:1px;
+    margin-left: -3px;
+}
+.qa-detail .qa-progress .qa-money{
+    position: absolute;
+    top: 0;
+    right: 7px;
+}
+.qa-detail .qa-starttime,.qa-detail .qa-endtime{
+    padding-top: 23px;
+}
+.qa-detail .qa-title{
+    margin-top: 15px;
+    margin-bottom: 10px;
+}
+.qa-detail .qa-remarks{
+    position: relative;
+    margin-bottom: 10px;
+}
+.qa-detail .qa-remarks p{
+    word-break: break-all;
+}
+.qa-detail .qa-remarks .remarks-toggle{
+    position: absolute;
+    right: 20px;
+    bottom: -5px;
+    cursor: pointer;
+}
+.qa-detail .qa-topics-prods{
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+.qa-detail .qa-topics-prods a{
+    padding: 3px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+}
+.qa-detail .qa-statics .qa-follow,.qa-detail .qa-statics .qa-collect{
+    margin-right: 10px;
+    padding-right: 10px;
+    border-right: 1px solid #eef1f1;
+    cursor: pointer;
+}
+.qa-invite{
+    margin-top: 20px;
+    padding: 20px 20px 10px 20px;
+}
+.qa-invite .invite-user-item{
+    border-bottom: 1px solid #eef1f1;
+    padding-top: 10px;
+    padding-bottom: 5px;
+    margin-bottom: 5px;
+}
+.qa-invite .invite-user-item:last-child{
+    /*border-bottom: none;*/
+}
+.qa-invite .invite-user-item .user-statics>span{
+    margin-right: 15px;
+    padding-right: 15px;
+    border-right: 1px solid #eef1f1;
+}
+.qa-invite .invite-user-item .user-statics>span:last-child{
+    border-right: none;
+}
+.qa-i-answer{
+    margin-top: 20px;
+    padding: 20px 20px 10px 20px;
+}
+.qa-i-answer .header{
+    font-size: 23px;
+    color: #000;
+    position: absolute;
+    top: -10px;
+}
+.qa-answers{
+    padding: 0 20px 10px 20px;
+    margin-top:20px;
+}
+.qa-detail .more-info{
+    background-color: #eef1f1;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+/****************************************问题详情页面 结束*****************/
+.user-avatar-80{
+    width: 80px;
+    height: 80px;
+    border-radius: 40px;
+}
+.user-info-card
+{
+    margin-bottom: 20px;
+}
+.user-info-card .user-avatar-container{
+    background-color: #eee;
+    height: 80px;
+    position: relative;
+    margin-bottom: 55px;
+}
+.user-info-card .user-avatar-container .user-avatar-circle{
+    position: absolute;
+    top: 35px;
+    left: 50%;
+    margin-left: -45px;
+    width: 90px;
+    height: 90px;
+    padding-top: 5px;
+    padding-left: 5px;
+    background-color: white;
+    border-radius: 45px;
+}
+.user-info-card .user-name{
+    margin-bottom: 10px;
+}
+.lg-text{
+    font-size: 23px;
+    color: #000;
+}
+.btn-orange-border{
+    font-size: 15px;
+    color: #fc7014;
+    padding: 5px 10px 5px 10px;
+    border-radius: 10px;
+    border:1px solid #fc7014;
+    text-align: center;
+    display: inline-block;
+    margin-bottom: 5px;
+    margin-top: 5px;
+    cursor: pointer;
+}
+.vertical-statics{
+    text-align: center;
+    margin: 20px 0;
+}
+.vertical-statics span{
+    display: inline-block;
+    font-size: 15px;
+    color: #67686b;
+}
+.course-info-card{
+    padding-top: 20px;
+    margin-bottom: 20px;
+}
+.course-info-card .course-name{
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+.topic-active{
+    border-right: 3px solid #fc7014;
+}
+.topic-active a{
+    color: #fc7014;
+}
+.table-span span{
+    color:#999;
+}
+.orange-tip{
+    background-color: #fc7014;
+    padding: 10px;
+    color: white;
+    font-weight: 600;
+}
+.em-border{
+    border:1px solid #fc7014;
+    border-radius: 5px;
+}
+/*.carousel .carousel-inner .item{*/
+    /*margin-left: auto;*/
+    /*margin-right: auto;*/
+    /*width: 1680px;*/
+/*}*/
+/********************************用户个人主页****************************/
+.user-detail .user-name{
+    border-bottom: 2px solid #eaebeb;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+}
+.user-detail .statics-item{
+    padding-bottom: 10px;
+}
+.user-detail .statics-item span{
+    font-size: 17px;
+}
+.user-prod-img{
+    height: 240px;
+    margin-bottom: 10px;
+    overflow-y: hidden;
+}
+.user-prod-img img{
+    height: 160px;
+}
+.img-popup{
+    cursor: pointer;
+}
+.unem-text{
+    color: #67686b;
+}
+.lg-title-border{
+    font-size: 23px;
+    border-bottom: 1px solid #e6e6e6;
+    padding-bottom: 15px;
+}
+.proposal-answer-item{
+    margin-top: 20px;
+    border-bottom: 1px solid #e6e6e6;
+}
+.proposal-answer-item .answer-info{
+    margin-bottom: 15px;
+}
+.proposal-answer-item .answer-info a{
+    margin-right: 15px;
+}
+/*******************************兴趣小组样式***********************************/
+.course-home-item{
+    border:1px solid #e6e6e6;
+    margin-bottom: 30px;
+}
+.course-home-item .course-name-img{
+    text-align: center;
+    margin-bottom: 28px;
+    padding-top: 40px;
+}
+.course-home-item .course-name-img img{
+    border:2px solid #fff;
+    width: 110px;
+    height: 110px;
+}
+.course-home-item .course-name-img-green{
+    background-color: #7ac943;
+}
+.course-home-item .course-name-img-orange{
+    background-color: #faa032;
+}
+.course-home-item .course-name-img-blue{
+    background-color: #29abe2;
+}
+.course-home-item .course-name-img-purple{
+    background-color: #662d9a;
+}
+.course-home-item .course-name-img-rose{
+    background-color: #ed1e79;
+}
+.course-home-item .course-name-img .course-name{
+    margin-top: 15px;
+    padding-bottom: 20px;
+    height: 41px;
+    overflow: hidden;
+}
+.course-home-item .course-name-img .course-name a{
+    color: #fff;
+}
+.course-home-item .course-remarks{
+    text-indent: 2em;
+    margin-bottom: 20px;
+    height: 40px;
+    overflow: hidden;
+}
+.p-break{
+    word-break: break-all;
+}
+.course-home-item .course-statics{
+    margin-bottom: 25px;
+}
+.course-home-item .course-statics>span{
+    margin-left: 1px;
+    margin-right: 5px;
+}
+.course-home-item .course-btns{
+    text-align: center;
+    margin-bottom: 35px;
+}
+.course-home-item .course-btns a{
+    border-width: 1px;
+    border-style: solid;
+    height: 40px;
+    line-height: 40px;
+    width: 130px;
+    display: inline-block;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.course-home-item .course-btns .course-btn-green{
+    border-color: #7ac943;
+    color: #7ac943;
+}
+.course-home-item .course-btns .course-btn-orange{
+    border-color: #faa032;
+    color: #faa032;
+}
+.course-home-item .course-btns .course-btn-blue{
+    border-color: #29abe2;
+    color: #29abe2;
+}
+.course-home-item .course-btns .course-btn-purple{
+    border-color: #662d9a;
+    color: #662d9a;
+}
+.course-home-item .course-btns .course-btn-rose{
+    border-color: #ed1e79;
+    color: #ed1e79;
+}
+.course-newest-item{
+    border-bottom: 1px solid #e6e6e6;
+    padding-top: 10px;
+    padding-bottom: 20px;
+}
+.course-newest-item p.p-remarks{
+    max-height: 40px;
+    overflow: hidden;
+}
+.course-newest-item img{
+    margin-bottom: 10px;
+}
+/***************************小组详情页面***********************/
+.course-detail-info{
+    margin-top: 70px;
+}
+.course-detail-info .img-statics-container{
+
+}
+.course-detail-info .img-statics-container .img-container{
+    position: relative;
+    margin-bottom: 60px;
+}
+.course-detail-info .img-statics-container .img-container img{
+    position: absolute;
+    width: 150px;
+    top: -100px;
+}
+.course-detail-info .img-statics-container .statics-info .stac-item{
+    margin-bottom: 10px;
+    background-color: #f2f2f2;
+    padding: 5px 10px;
+    /*width: 150px;*/
+}
+.course-detail-info .course-title{
+    position: absolute;
+    top:-90px;
+}
+.course-detail-info .course-title a{
+    color: #fc7014;
+}
+.course-detail-info .course-qa{
+    margin-bottom: 20px;
+}
+.discuss-item .dis-main{
+    border-left: 2px solid #e5e5e5;
+    position: relative;
+    padding-bottom: 30px;
+}
+.discuss-item .dis-main .dis-time{
+    position: absolute;
+    top: 50%;
+    margin-top: -10px;
+    width: 100px;
+    text-align: right;
+    left: -92px;
+    color: #fc7014;
+}
+.discuss-item .dis-content{
+    padding: 10px 20px;
+}
+.discuss-item .dis-answer{
+    background-color: #f4f4f4;
+    border-radius: 10px;
+}
+.qa-img-holder{
+    position: relative;
+    height: 150px;
+    overflow: hidden;
+}
+.qa-img-holder a{
+    position: absolute;
+    right: 0;
+    top:0;
+    background-color: #fc7014;
+    color: white;
+}
+.qa-img-btn-holder{
+    margin-top: 10px;
+}
+.user-qa-item{
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+}
+.user-qa-item .user-item .qa-item{
+    margin-bottom: 5px;
+    padding-bottom: 5px;
+    border-bottom: 1px dashed #e7e7e7;
+}
+.user-qa-item .user-item .qa-item:last-child{
+    border-bottom: none;
+}
+.qaprod-comment-item{
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ddd;
+}
+@media all and (max-width:800px) {
+    .course-right{
+        margin-top: 40px;
+    }
+    .course-detail-info .course-title{
+        top:-55px;
+    }
+}
+.ddd-border-down{
+    border-bottom: 1px solid #ddd;
+}
+.part_content{
+    overflow:hidden;
+    height: 50px;
+}
+
+.menu-md li a{
+    font-size: 16px;
+}
+.orange-h-menus{
+    padding: 0;
+    margin: 0;
+}
+.orange-h-menus li{
+    list-style-type: none;
+    float: left;
+}
+.orange-h-menus li a{
+    display: block;
+    padding: 5px 10px;
+    margin-bottom: 10px;
+}
+.orange-h-menus li a.active{
+    color: #fc7017;
+    font-weight: 700;
+}
+.not-login-holder{
+    padding: 20px; border:2px solid #fc7014; margin-top: 20px;margin-bottom: 20px; border-radius: 10px; text-align: center;
+}
+.not-login-holder a{
+    color:#fc7014;
+    font-size: 16px;
+    font-weight: 600;
+}
+.home-group-container{
+    box-shadow: 5px 5px 25px 0px;
+    border: 1px solid #eef1f1;
+    border-radius: 5px;
+    padding: 10px 20px;
+    margin-bottom: 20px;
+}
+.home-group-item{
+    height: 100px;
+    overflow: hidden;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #fc7014;
+}
+.home-group-item:hover{
+    border-bottom: none;
+    cursor: pointer;
+    box-shadow: 2px 2px 0px 0px #fc7014;
+}
+.home-group-all{
+    border-right: none;
+    padding-top: 20px;
+}
+.labels-container .label-title{
+    float: left;
+    margin-top: 5px;
+}
+.labels-container .label-item{
+    float: left;
+    border: 1px solid #fc7014;
+    border-radius: 5px;
+    padding: 4px 10px;
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-bottom: 10px;
+}
+.labels-container .active{
+    background-color: #fc7014;
+}
+.labels-container .active a{
+    color: white;
+}
+.labels-container .label-item a.label-text{
+    margin-right: 10px;
+}
+.labels-container .label-item .label-btn{
+    float: left;
+}

@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="/tpls/plane-template::header('用户管理列表')">
+    <i th:fragment="top">
+        <style type="text/css">
+            td{
+                border-bottom: 1px solid #eee;
+            }
+        </style>
+    </i>
+</head>
+<body>
+    <div th:include="/tpls/plane-template::top_menu" th:remove="tag"></div>
+    <div class="container-fluid main-wrapper" >
+        <div class="row">
+            <div class="col-lg-offset-1 col-lg-10">
+                <div class="panel panel-default">
+
+                    <div class="panel-heading">
+                        <h3>
+                            <span >用户列表</span>
+                            <a id="open_user" class="pull-right btn btn-info">添加</a>
+                        </h3>
+                    </div>
+
+                    <div class="panel-body">
+                        <!--表单查询-->
+                        <form action="/user/list" method="get">
+                            <div class="form-group" style="margin-bottom: 30px">
+                                <span class="col-xs-2"
+                                      style="line-height: 35px;text-align: right">用户名&nbsp;:&nbsp;</span>
+                                <span class="col-xs-3">
+                                    <input type="text" name="queryUserName" th:value="${userFileVO.queryUserName}" class="form-control" placeholder="输入用户名查询">
+                                </span>
+                                <span class="col-xs-2"
+                                      style="line-height: 35px;text-align: right">邮箱&nbsp;:&nbsp;</span>
+                                 <span class="col-xs-3">
+                                    <input type="text" name="queryEmail" th:value="${userFileVO.queryEmail}" class="form-control" placeholder="输入邮箱查询">
+                                </span>
+                                <input type="submit" class="btn btn-primary" id="search" value="查询">
+                            </div>
+                        </form>
+                        <table class="table table-hover table-striped">
+                            <thead>
+                            <tr>
+                                <th>序号</th>
+                                <th >
+                                    <a title="按用户名排序" th:classappend="${userFileVO.sort=='user_name'?'active':''}">用户名&nbsp;
+                                        <i th:attr="data-value=${userFileVO.sort=='user_name'?(userFileVO.order=='desc'?'asc':'desc'):'desc'}"
+                                               th:classappend="${userFileVO.sort=='user_name'?(userFileVO.order=='desc'?'fa-arrow-up':'fa-arrow-down'):'fa-arrow-down'}"
+                                               class="fa" data-name="user_name" aria-hidden="true"></i></a></th>
+                                <th >
+                                    <a title="按邮箱排序" th:classappend="${userFileVO.sort=='email'?'active':''}">邮箱&nbsp;
+                                        <i th:attr="data-value=${userFileVO.sort=='email'?(userFileVO.order=='desc'?'asc':'desc'):'desc'}"
+                                               th:classappend="${userFileVO.sort=='email'?(userFileVO.order=='desc'?'fa-arrow-up':'fa-arrow-down'):'fa-arrow-down'}"
+                                               class="fa" data-name="email" aria-hidden="true"></i></a></th>
+                                <th >
+                                    <a title="按创建日期排序" th:classappend="${userFileVO.sort=='create_time'?'active':''}">创建日期&nbsp;
+                                        <i th:attr="data-value=${userFileVO.sort=='create_time'?(userFileVO.order=='desc'?'asc':'desc'):'desc'}"
+                                               th:classappend="${userFileVO.sort=='create_time'?(userFileVO.order=='desc'?'fa-arrow-up':'fa-arrow-down'):'fa-arrow-down'}"
+                                               class="fa" data-name="create_time" aria-hidden="true"></i></a></th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:if="${!#lists.isEmpty(userList)}" th:each="user,userStr:${userList}">
+                                <td th:text="${userStr.index+1}"></td>
+                                <td th:utext="${user.userName}">1</td>
+                                <td th:utext="${user.email}">1</td>
+                                <td th:text="${#dates.format(user.createTime,'yyyy-MM-dd HH:mm')}">1</td>
+                                <td><a th:attr="data-id=${user.id}" class="btn btn-success">编辑</a>
+                                    <a th:attr="data-id=${user.id}" class="btn btn-danger">删除</a>
+                                    <a th:attr="data-id=${user.id}" class="btn btn-default">重置密码</a></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--添加的model-->
+    <div class="modal fade" id="user_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+
+        <div class="modal-dialog">
+            <div class="modal-content" >
+                <div class="modal-body" >
+                    <div class="panel panel-default" style="margin-bottom: 0">
+                        <div class="panel-heading">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title" >添加用户</h4>
+                        </div>
+                        <div class="panel-body" >
+                            <form class="form-horizontal" action="">
+
+                                <div class="form-group">
+                                    <label class="col-lg-3 control-label" >用户名:</label>
+                                    <div class="col-lg-8">
+                                        <input type="text" id="userName" class="form-control">
+                                    </div>
+                                </div>
+
+
+                                <!--
+                                <div class="form-group">
+                                    <label class="col-lg-3 control-label" >确认密码:</label>
+                                    <div class="col-lg-8">
+                                        <input type="password" id="confirm_passWord" class="form-control" >
+                                    </div>
+                                </div>
+                                -->
+
+                                <div class="form-group">
+                                    <label class="col-lg-3 control-label" >邮箱:</label>
+                                    <div class="col-lg-8">
+                                        <input type="text"  id="email" class="form-control">
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="modal-footer" >
+                        <button type="button" data-dismiss="modal" class="btn">关闭</button>
+                        <button type="button" id="save_user" class="btn btn-primary">确认</button>
+                    </div>
+                </div><!-- /.modal-body -->
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+    <!--修改的model-->
+    <div class="modal fade" id="user_modify_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+
+        <div class="modal-dialog">
+            <div class="modal-content" >
+                <div class="modal-body" >
+                    <div class="panel panel-default" style="margin-bottom: 0">
+                        <div class="panel-heading">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title" >修改用户</h4>
+                        </div>
+                        <div class="panel-body" >
+                            <form class="form-horizontal" action="">
+
+                                <div class="form-group">
+                                    <label class="col-lg-3 control-label" >用户名:</label>
+                                    <div class="col-lg-8">
+                                        <input type="text" id="modify_userName" class="form-control">
+                                    </div>
+                                </div>
+
+                                <!--
+                                <div class="form-group">
+                                    <label class="col-lg-3 control-label" >确认密码:</label>
+                                    <div class="col-lg-8">
+                                        <input type="text" id="confirm_modify_passWord" class="form-control" >
+                                    </div>
+                                </div>
+                                -->
+
+                                <div class="form-group">
+                                    <label class="col-lg-3 control-label" >邮箱:</label>
+                                    <div class="col-lg-8">
+                                        <input type="text" id="modify_email" class="form-control" >
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="modal-footer" >
+                        <button type="button" data-dismiss="modal" class="btn">关闭</button>
+                        <button type="button" id="save_modify_user" class="btn btn-primary">修改</button>
+                    </div>
+                </div><!-- /.modal-body -->
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+    <script th:inline="javascript" >
+        /*[+
+         var userFileVO=[[${userFileVO}]];
+         +]*/
+    </script>
+    <div th:include="/tpls/plane-template::footer" th:remove="tag"></div>
+    <script type="text/javascript">
+        $(function(){
+            $('#plane-list').children().removeClass('active').eq(2).addClass('active');
+
+            $('#open_user').click(function(){
+                $('#user_modal').modal('show');
+            });
+
+
+            var uList={
+                id:'',
+                userName:'',
+                passWord:'',
+                email:''
+            };
+            $('#save_user').click(function(){
+                uList.userName=$('#userName').val();
+                uList.email=$('#email').val();
+                if(uList.userName.length==0){
+                    alert('用户名不能为空');
+                    return
+                }
+                var s =/^[\u2E80-\u9FFF]+$/;
+                if(s.test(uList.userName))
+                {
+                    alert("用户名格式不正确！请输入非中文");
+                    return;
+                }
+                if(uList.email.length==0){
+                    alert('邮箱不能为空');
+                    return
+                }
+                var e=/^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/;
+                if(!e.test(uList.email))
+                {
+                    alert("邮箱格式不正确！请重新输入");
+                    return;
+                }
+                $.ajax({
+                    url:'/user/add',
+                    data:uList,
+                    success:function(data){
+                        if(data.success){
+                            alert('添加成功');
+                            window.location.href='/user/list';
+                            return;
+                        }
+                        if(data.code==-2){
+                            alert('用户名已存在');
+                            return;
+                        }
+                        if(data.code==-3){
+                            alert('邮箱已存在');
+                            return;
+                        }
+                        alert('添加失败');
+                    }
+                })
+            });
+
+            $('table').find('tr').find('td:last').find('a:eq(0)').click(function(){
+                $('#modify_userName').val($(this).parent().parent().find('td:eq(1)').text());
+                $('#modify_email').val($(this).parent().parent().find('td:eq(2)').text());
+                uList.id=$(this).attr('data-id');
+                $('#user_modify_modal').modal('show');
+            });
+
+            var urlTrans=function(key,value){
+                if (value != null && value.length != 0 && value != 'null') {
+                    return '&'+key+'='+value;
+                }
+                return '';
+            };
+            $('table').find('tr').find('th').find('i').parent().click(function(){
+
+                window.location.href="/user/list?"+
+                        urlTrans('queryUserName',userFileVO.queryUserName)+
+                        urlTrans('queryEmail',userFileVO.queryEmail)+
+                        urlTrans('order',$(this).children().attr('data-value'))+
+                        urlTrans('sort',$(this).children().attr('data-name'));
+            });
+
+
+            $('#save_modify_user').click(function(){
+                uList.userName=$('#modify_userName').val();
+                uList.email=$('#modify_email').val();
+                if(uList.userName.length==0){
+                    alert('用户名不能为空');
+                    return
+                }
+                var s =/^[\u2E80-\u9FFF]+$/;
+                if(s.test(uList.userName))
+                {
+                    alert("用户名格式不正确！请输入非中文");
+                    return;
+                }
+                if(uList.email.length==0){
+                    alert('邮箱不能为空');
+                    return
+                }
+                var e=/^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/;
+                if(!e.test(uList.email))
+                {
+                    alert("邮箱格式不正确！请重新输入");
+                    return;
+                }
+                $.ajax({
+                    url:'/user/update',
+                    data:uList,
+                    success:function(data){
+                        if(data.success){
+                            alert('修改成功');
+                            window.location.href='/user/list';
+                            return;
+                        }
+                        if(data.code==-2){
+                            alert('存在相同的用户名');
+                            return;
+                        }
+                        if(data.code==-3){
+                            alert('存在相同的邮箱');
+                            return;
+                        }
+
+                        alert('修改失败');
+                    }
+                })
+            })
+
+            $('table').find('tr').find('td:last').find('a:eq(1)').click(function(){
+                uList.id=$(this).attr('data-id');
+                if(confirm("确认删除该条用户信息吗")){
+                    $.ajax({
+                        url:'/user/delete',
+                        data:{id:uList.id},
+                        success:function(data){
+                        if(data.success){
+                            alert('删除成功');
+                            window.location.href='/user/list';
+                            return;
+                        }
+                        alert('删除失败')
+                    }
+                    })
+                }
+            });
+
+            $('table').find('tr').find('td:last').find('a:eq(2)').click(function(){
+                uList.id=$(this).attr('data-id');
+                if(confirm("确认重置该条用户密码吗")){
+                    $.ajax({
+                        url:'/user/reset',
+                        data:{id:uList.id},
+                        success:function(data){
+                            if(data.success){
+                                alert('重置成功');
+                                window.location.href='/user/list';
+                                return;
+                            }
+                            alert('重置失败')
+                        }
+                    })
+                }
+            });
+
+
+
+
+        })
+
+
+
+    </script>
+</body>
+</html>

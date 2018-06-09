@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.plane.mapper.StudentMapper">
+
+
+    <insert id="addStudent">
+      insert into t_stu(name,age,sex)
+      value(#{name},#{age},#{sex})
+    </insert>
+
+
+    <!--<insert id="addStudent" useGeneratedKeys="true" keyProperty="id">
+      insert into t_stu(name,age,sex)
+      value(#{name},#{age},#{sex})
+    </insert>
+-->
+    <select id="selectStudentById" resultType="student" >
+      select *from t_stu where id=#{id}
+    </select>
+
+    <update id="updateStudent">
+        update t_stu set name=#{name},age=#{age},sex=#{sex} where id=#{id}
+    </update>
+
+    <delete id="deleteStudentById">
+      delete from t_stu where id=#{id}
+    </delete>
+
+    <select id="selectStudent" resultType="student">
+      select * from t_stu where 1=1
+    </select>
+
+
+</mapper>

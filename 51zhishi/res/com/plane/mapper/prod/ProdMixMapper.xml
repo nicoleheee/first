@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.plane.mapper.prod.ProdMixMapper">
+
+    <insert id="insertProdMix" parameterType="prodMix">
+        insert into t_prod_mix(prod_mix_name,content,creator_id,parent_id)
+        VALUES (#{prodMixName},#{content},#{creatorId},#{parentId})
+    </insert>
+
+    <select id="queryProdMixByParentId" resultType="prodMix" parameterType="com.plane.web.vo.prod.ProdMixFileVO">
+        select p.*,u.user_name from t_prod_mix p LEFT join t_user u on p.creator_id=u.id
+        where p.parent_id=#{parentId}
+        <if test="queryProdMixName!=null and queryProdMixName!=''">
+            and p.prod_mix_name like concat('%',#{queryProdMixName},'%')
+        </if>
+        <if test="sort!=null and sort!=''">
+            <if test="sort=='creatorId'">
+                ORDER by u.user_name ${order}
+            </if>
+            <if test="sort!='creatorId'">
+                ORDER by p.${sort} ${order}
+            </if>
+        </if>
+        <if test="sort==null or sort==''">
+            ORDER by p.create_time desc
+        </if>
+    </select>
+
+
+    <select id="queryProdMixById" resultType="ProdMix" parameterType="Long">
+       select p.*,u.user_name from t_prod_mix p LEFT join t_user u on p.creator_id=u.id
+        where p.id=#{id}
+    </select>
+
+    <select id="checkProdMix" parameterType="prodMix" resultType="Long">
+        select id from t_prod_mix where prod_mix_name=#{prodMixName}
+        <if test="parentId!=null">
+            and parent_id=#{parentId}
+        </if>
+        <if test="parentId==null">
+            and parent_id=0
+        </if>
+        <if test="id!=null">
+            and id!=#{id}
+        </if>
+    </select>
+
+    <update id="updateProdMix" parameterType="prodMix">
+        update t_prod_mix set prod_mix_name=#{prodMixName},content=#{content}
+        where id=#{id}
+    </update>
+
+</mapper>

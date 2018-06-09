@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="/tpls/plane-template::header('PBS列表')">
+    <i th:fragment="top">
+        <style type="text/css">
+            td{
+                border-bottom: 1px solid #eee;
+            }
+        </style>
+    </i>
+</head>
+<body>
+    <div th:include="/tpls/plane-template::top_menu" th:remove="tag"></div>
+    <div class="container-fluid main-wrapper" >
+        <div class="row">
+            <div class="col-lg-offset-1 col-lg-10">
+                <ol class="breadcrumb" th:if="${!#lists.isEmpty(navigationPBS)}">
+                    <li ><a href="/pbs/list?parentId=0">PBS</a></li>
+                    <th:block   th:each="navi:${navigationPBS}">
+                        <li><a th:href="${'/pbs/list?parentId='+navi.id}" th:utext="${navi.pbsName}">PBS</a></li>
+                    </th:block>
+                </ol>
+            </div>
+        </div>
+        <div class="row" th:if="${pbs!=null}">
+            <div class="col-lg-offset-1 col-lg-10">
+                <div class="panel panel-default">
+
+                    <div class="panel-heading">
+                        <span >PBS信息</span>
+                    </div>
+
+                    <div class="panel-body">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>名称</th>
+                                    <th>内容</th>
+                                    <th>版本号</th>
+                                    <th>创建者</th>
+                                    <th>时间</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td th:utext="${pbs.pbsName}"></td>
+                                    <td th:utext="${pbs.content}">1</td>
+                                    <td th:utext="${pbs.version}">1</td>
+                                    <td th:utext="${pbs.userName}">1</td>
+                                    <td th:text="${#dates.format(pbs.createTime,'yyyy-MM-dd HH:mm')}">1</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                 </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-offset-1 col-lg-10">
+                <div class="panel panel-default">
+
+                    <div class="panel-heading">
+                        <h3>
+                            <span th:utext="${pbs==null?'PBS列表':'PBS子列表'}"></span>
+                            <a id="open_pbs" class="pull-right btn btn-info">添加</a>
+                        </h3>
+                    </div>
+
+                    <div class="panel-body">
+                        <!--表单查询-->
+                        <form action="/pbs/list" method="get">
+                            <div class="form-group" style="margin-bottom: 30px">
+                                <input type="text" hidden name="parentId" th:value="${pbsFileVO.parentId}">
+                                <span class="col-xs-offset-1 col-xs-2"
+                                      style="line-height: 35px;text-align: right">名称&nbsp;:&nbsp;</span>
+                                <span class="col-xs-5">
+                                    <input type="text" name="queryPBSName" th:value="${pbsFileVO.queryPBSName}" class="form-control" placeholder="输入名称查询">
+                                </span>
+                                <input type="submit" class="btn btn-primary" id="search" value="查询">
+                            </div>
+                        </form>
+                        <table class="table table-hover table-striped">
+                            <thead>
+                                <tr>
+                                    <th>序号</th>
+                                    <th >
+                                        <a title="按名称排序" th:classappend="${pbsFileVO.sort=='pbs_name'?'active':''}">名称&nbsp;<i th:attr="data-value=${pbsFileVO.sort=='pbs_name'?(pbsFileVO.order=='desc'?'asc':'desc'):'desc'}"
+                                                   th:classappend="${pbsFileVO.sort=='pbs_name'?(pbsFileVO.order=='desc'?'fa-arrow-up':'fa-arrow-down'):'fa-arrow-down'}"
+                                                   class="fa" data-name="pbs_name" aria-hidden="true"></i></a></th>
+                                    <th>内容</th>
+                                    <th >
+                                        <a title="按版本号排序" th:classappend="${pbsFileVO.sort=='version'?'active':''}">版本号&nbsp;<i th:attr="data-value=${pbsFileVO.sort=='version'?(pbsFileVO.order=='desc'?'asc':'desc'):'desc'}"
+                                                    th:classappend="${pbsFileVO.sort=='version'?(pbsFileVO.order=='desc'?'fa-arrow-up':'fa-arrow-down'):'fa-arrow-down'}"
+                                                    class="fa" data-name="version" aria-hidden="true"></i></a></th>
+                                    <th >
+                                        <a title="按创建者排序" th:classappend="${pbsFileVO.sort=='creatorId'?'active':''}">创建者&nbsp;<i th:attr="data-value=${pbsFileVO.sort=='creatorId'?(pbsFileVO.order=='desc'?'asc':'desc'):'desc'}"
+                                                    th:classappend="${pbsFileVO.sort=='creatorId'?(pbsFileVO.order=='desc'?'fa-arrow-up':'fa-arrow-down'):'fa-arrow-down'}"
+                                                    class="fa" data-name="creatorId" aria-hidden="true"></i></a></th>
+                                    <th >
+                                        <a title="按创建日期排序" th:classappend="${pbsFileVO.sort=='create_time'?'active':''}">创建日期&nbsp;<i th:attr="data-value=${pbsFileVO.sort=='create_time'?(pbsFileVO.order=='desc'?'asc':'desc'):'desc'}"
+                                                   th:classappend="${pbsFileVO.sort=='create_time'?(pbsFileVO.order=='desc'?'fa-arrow-up':'fa-arrow-down'):'fa-arrow-down'}"
+                                                   class="fa" data-name="create_time" aria-hidden="true"></i></a></th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:if="${!#lists.isEmpty(pbsList)}" th:each="pbs,pbsStr:${pbsList}">
+                                    <td th:text="${pbsStr.index+1}"></td>
+                                    <td ><a  th:href="${'/pbs/list?parentId='+pbs.id}" th:utext="${pbs.pbsName}"></a></td>
+                                    <td th:utext="${pbs.content}">1</td>
+                                    <td th:utext="${pbs.version}">1</td>
+                                    <td th:utext="${pbs.userName}">1</td>
+                                    <td th:text="${#dates.format(pbs.createTime,'yyyy-MM-dd HH:mm')}">1</td>
+                                    <td>
+                                        <a th:href="${'/pbs/list?parentId='+pbs.id}" class="btn btn-warning">分解</a>
+                                        <a th:attr="data-id=${pbs.id}" class="btn btn-success">编辑</a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div th:if="${#lists.isEmpty(pbsList)}" class="text-center">
+                            <span >暂无数据</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--添加的model-->
+    <div class="modal fade" id="pbs_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+
+        <div class="modal-dialog">
+            <div class="modal-content" >
+                <div class="modal-body" >
+                    <div class="panel panel-default" style="margin-bottom: 0">
+                        <div class="panel-heading">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title" >添加PBS</h4>
+                        </div>
+                        <div class="panel-body" >
+                            <form class="form-horizontal" action="">
+
+                                <div class="form-group">
+                                    <label class="col-lg-3 control-label" >名称:</label>
+                                    <div class="col-lg-9">
+                                        <input type="text" id="pbsName"  class="form-control" >
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-lg-3 control-label" >版本号:</label>
+                                    <div class="col-lg-9">
+                                        <input type="text" id="version" name="topic" class="form-control" >
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-lg-3 control-label" >内容:</label>
+                                    <div class="col-lg-9">
+                                         <textarea title="内容" name="" id="content" class="form-control"
+                                                   rows="6"></textarea>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-lg-3 control-label" >父级DOORS:</label>
+                                    <div class="col-lg-9">
+                                        <input type="text" readonly="readonly" id="parent_id" class="form-control"
+                                               th:value="${pbs!=null?pbs.pbsName:''}"
+                                               th:attr="data-id=${pbs!=null?pbs.id:0}">
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="modal-footer" >
+                        <button type="button" data-dismiss="modal" class="btn">关闭</button>
+                        <button type="button" id="save_pbs" class="btn btn-primary">确认</button>
+                    </div>
+                </div><!-- /.modal-body -->
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+    <!--修改的model-->
+    <div class="modal fade" id="pbs_modify_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+
+        <div class="modal-dialog">
+            <div class="modal-content" >
+                <div class="modal-body" >
+                    <div class="panel panel-default" style="margin-bottom: 0">
+                        <div class="panel-heading">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title" >修改PBS</h4>
+                        </div>
+                        <div class="panel-body" >
+                            <form class="form-horizontal" action="">
+
+                                <div class="form-group">
+                                    <label class="col-lg-3 control-label" >名称:</label>
+                                    <div class="col-lg-9">
+                                        <input type="text" id="modify_pbs_name" class="form-control" >
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-lg-3 control-label" >版本号:</label>
+                                    <div class="col-lg-9">
+                                        <input type="text" id="modify_version" class="form-control" >
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-lg-3 control-label" >内容:</label>
+                                    <div class="col-lg-9">
+                                        <textarea title="内容" name="" id="modify_content" class="form-control"
+                                                  rows="6"></textarea>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-lg-3 control-label" >父级DOORS:</label>
+                                    <div class="col-lg-9">
+                                        <input type="text" readonly="readonly" id="modify_parent_id" class="form-control"
+                                               th:value="${pbs!=null?pbs.pbsName:''}"
+                                               th:attr="data-id=${pbs!=null?pbs.id:0}">
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="modal-footer" >
+                        <button type="button" data-dismiss="modal" class="btn">关闭</button>
+                        <button type="button" id="save_modify_pbs" class="btn btn-primary">修改</button>
+                    </div>
+                </div><!-- /.modal-body -->
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+    <script th:inline="javascript" >
+        /*[+
+         var pbsFileVO=[[${pbsFileVO}]];
+         +]*/
+    </script>
+    <div th:include="/tpls/plane-template::footer" th:remove="tag"></div>
+    <script type="text/javascript">
+        $(function(){
+            $('#plane-list').children().removeClass('active').eq(1).addClass('active');
+
+            $('#open_pbs').click(function(){
+                $('#pbs_modal').modal('show');
+            });
+
+            var pbs={
+                id:'',
+                pbsName:'',
+                content:'',
+                version:'',
+                parentId:''
+            };
+            $('#save_pbs').click(function(){
+                pbs.pbsName=$('#pbsName').val();
+                pbs.version=$('#version').val();
+                pbs.content=$('#content').val();
+                pbs.parentId=$('#parent_id').attr('data-id');
+                if(pbs.pbsName.length==0){
+                    alert('标题不能为空');
+                    return
+                }
+                if(pbs.version.length==0){
+                    alert('版本号不能为空');
+                    return
+                }
+                if(pbs.content.length==0){
+                    alert('内容不能为空');
+                    return
+                }
+                $.ajax({
+                    url:'/pbs/add',
+                    data:pbs,
+                    success:function(data){
+                        if(data.success){
+                            alert('添加成功');
+                            window.location.href='/pbs/list'+pbs.parentId!=null?'?parentId='+pbs.parentId:'';
+                            return;
+                        }
+                        if(data.code==-2){
+                            alert('存在相同的名称');
+                            return
+                        }
+                        alert('添加失败');
+                    }
+                })
+            });
+
+            $('table').find('tr').find('td:last').find('a:eq(1)').click(function(){
+                $('#modify_pbs_name').val($(this).parent().parent().find('td:eq(1)').find('a').text());
+                $('#modify_content').val($(this).parent().parent().find('td:eq(2)').text());
+                $('#modify_version').val($(this).parent().parent().find('td:eq(3)').text());
+                pbs.id=$(this).attr('data-id');
+                $('#pbs_modify_modal').modal('show');
+            });
+
+            var urlTrans=function(key,value){
+                if (value != null && value.length != 0 && value != 'null') {
+                    return '&'+key+'='+value;
+                }
+                return '';
+            };
+            $('table').find('tr th').find('i').parent().click(function(){
+
+                window.location.href="/pbs/list?parentId="+pbsFileVO.parentId+
+                    urlTrans('queryPBSName',pbsFileVO.queryPBSName)+
+                    urlTrans('order',$(this).children().attr('data-value'))+
+                    urlTrans('sort',$(this).children().attr('data-name'));
+            });
+
+            $('#save_modify_pbs').click(function(){
+                pbs.pbsName=$('#modify_pbs_name').val();
+                pbs.content=$('#modify_content').val();
+                pbs.version=$('#modify_version').val();
+                pbs.parentId=$('#parent_id').attr('data-id');
+                if(pbs.pbsName.length==0){
+                    alert('标题不能为空');
+                    return
+                }
+                if(pbs.version.length==0){
+                    alert('版本号不能为空');
+                    return
+                }
+                if(pbs.content.length==0){
+                    alert('内容不能为空');
+                    return
+                }
+                $.ajax({
+                    url:'/pbs/update',
+                    data:pbs,
+                    success:function(data){
+                        if(data.success){
+                            alert('修改成功');
+                            window.location.href='/pbs/list'+pbs.parentId!=null?'?parentId='+pbs.parentId:'';
+                            return;
+                        }
+                        if(data.code==-2){
+                            alert('存在相同的名称');
+                            return;
+                        }
+                        alert('修改失败');
+                    }
+                })
+            })
+
+
+        })
+    </script>
+</body>
+
+</html>

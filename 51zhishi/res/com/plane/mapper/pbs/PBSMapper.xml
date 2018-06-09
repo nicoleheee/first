@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.plane.mapper.pbs.PBSMapper">
+
+    <insert id="insertPBS" parameterType="pbs">
+        insert into t_pbs(pbs_name,content,version,creator_id,create_time,parent_id)
+        VALUES (#{pbsName},#{content},#{version},#{creatorId},#{createTime},#{parentId})
+    </insert>
+
+    <select id="queryPBSByParentId" resultType="pbs" parameterType="com.plane.web.vo.pbs.PBSFileVO">
+        select p.*,u.user_name from t_pbs p LEFT join t_user u on p.creator_id=u.id
+        where p.parent_id=#{parentId}
+        <if test="queryPBSName!=null and queryPBSName!=''">
+            and p.pbs_name like concat('%',#{queryPBSName},'%')
+        </if>
+        <if test="sort!=null and sort!=''">
+            <if test="sort=='creatorId'">
+                ORDER by u.user_name ${order}
+            </if>
+            <if test="sort!='creatorId'">
+                ORDER by p.${sort} ${order}
+            </if>
+        </if>
+        <if test="sort==null or sort==''">
+            ORDER by p.create_time desc
+        </if>
+
+    </select>
+
+    <select id="queryPBSById" resultType="pbs" parameterType="Long">
+       select P.*,u.user_name from t_PBS P LEFT join t_user u on P.creator_id=u.id
+        where P.id=#{id}
+    </select>
+
+    <select id="checkPBS" parameterType="pbs" resultType="Long">
+        select id from t_pbs where pbs_name=#{pbsName}
+        <if test="parentId!=null">
+            and parent_id=#{parentId}
+        </if>
+        <if test="parentId==null">
+            and parent_id=0
+        </if>
+        <if test="id!=null">
+            and id!=#{id}
+        </if>
+    </select>
+
+    <update id="updatePBS" parameterType="pbs">
+        update t_pbs set pbs_name=#{pbsName},version=#{version},content=#{content}
+        where id=#{id}
+    </update>
+
+</mapper>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="/tpls/plane-template::header('首页')">
+    <i th:fragment="top">
+        <script src="/framework/jquery.js"></script>
+        <script src="/framework/bootstrap.js"></script>
+        <link rel="stylesheet" href="/css/bootstrap.css">
+    </i>
+</head>
+<body>
+
+<form action="/deletee" method="get" id="del_form">
+      <h4>删除:</h4>
+      <input type="text" name="id" id="book_id">
+      <input type="button" th:value="确定" id="del_btn">
+</form>
+
+<script type="text/javascript">
+    $(function (){
+        $("#del_btn").click(function () {
+            var id=$("#book_id").val();
+            if(""==id){
+                alert("please input id ");
+            }
+            else{
+                $("#del_form").submit();
+            }
+        })
+
+    })
+</script>
+</body>
+</html>

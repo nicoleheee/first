@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="/tpls/plane-template::header('产品结构')">
+    <i th:fragment="top">
+        <style type="text/css">
+            td{
+                border-bottom: 1px solid #eee;
+                min-width: 130px;
+            }
+            td:first-child{
+                min-width: 80px!important;
+            }
+        </style>
+    </i>
+</head>
+<body>
+    <div th:include="/tpls/plane-template::top_menu" th:remove="tag"></div>
+    <div class="container-fluid main-wrapper" >
+        <div class="row">
+            <div class="col-lg-offset-1 col-lg-10">
+                <ol class="breadcrumb" th:if="${!#lists.isEmpty(navigationProdMix)}">
+                    <li ><a href="/prod/list?parentId=0">产品结构</a></li>
+                    <th:block   th:each="navi:${navigationProdMix}">
+                        <li><a th:href="${'/prod/list?parentId='+navi.id}" th:utext="${navi.prodMixName}">DOORS</a></li>
+                    </th:block>
+                </ol>
+            </div>
+        </div>
+        <div class="row" th:if="${prodMix!=null}">
+            <div class="col-lg-offset-1 col-lg-10">
+                <div class="panel panel-default">
+
+                    <div class="panel-heading">
+                        <span >产品结构</span>
+                    </div>
+
+                    <div class="panel-body">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>结构名称</th>
+                                    <th>描述</th>
+                                    <th>创建者</th>
+                                    <th>时间</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td th:utext="${prodMix.prodMixName}"></td>
+                                    <td th:utext="${prodMix.content}">1</td>
+                                    <td th:utext="${prodMix.userName}">1</td>
+                                    <td th:text="${#dates.format(prodMix.createTime,'yyyy-MM-dd HH:mm')}">1</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                 </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-offset-1 col-lg-10">
+                <div class="panel panel-default">
+
+                    <div class="panel-heading">
+                        <h3>
+                            <span th:utext="${prodMix==null?'产品结构':'产品子结构'}"></span>
+                            <a id="open_prodMix" class="pull-right btn btn-info">添加</a>
+                        </h3>
+                    </div>
+
+                    <div class="panel-body">
+                        <!--表单查询-->
+                        <form action="/prod/list" method="get">
+                            <div class="form-group" style="margin-bottom: 30px">
+                                <input type="text" hidden name="parentId" th:value="${prodMixFileVO.parentId}">
+                                <span class="col-xs-offset-1 col-xs-2"
+                                      style="line-height: 35px;text-align: right">结构名称&nbsp;:&nbsp;</span>
+                                <span class="col-xs-5">
+                                    <input type="text" name="queryProdMixName" th:value="${prodMixFileVO.queryProdMixName}" class="form-control" placeholder="输入结构名称查询">
+                                </span>
+                                <input type="submit" class="btn btn-primary" id="search" value="查询">
+                            </div>
+                        </form>
+                        <table class="table table-hover table-striped">
+                            <thead>
+                                <tr>
+                                    <th>序号</th>
+                                    <th >
+                                        <a title="按结构名称排序" th:classappend="${prodMixFileVO.sort=='prod_mix_name'?'active':''}">结构名称&nbsp;<i th:attr="data-value=${prodMixFileVO.sort=='prod_mix_name'?(prodMixFileVO.order=='desc'?'asc':'desc'):'desc'}"
+                                                   th:classappend="${prodMixFileVO.sort=='prod_mix_name'?(prodMixFileVO.order=='desc'?'fa-arrow-up':'fa-arrow-down'):'fa-arrow-down'}"
+                                                   class="fa" data-name="prod_mix_name" aria-hidden="true"></i></a></th>
+                                    <th >描述</th>
+                                    <th >
+                                        <a title="按创建者排序" th:classappend="${prodMixFileVO.sort=='creatorId'?'active':''}">创建者&nbsp;<i th:attr="data-value=${prodMixFileVO.sort=='creatorId'?(prodMixFileVO.order=='desc'?'asc':'desc'):'desc'}"
+                                                    th:classappend="${prodMixFileVO.sort=='creatorId'?(prodMixFileVO.order=='desc'?'fa-arrow-up':'fa-arrow-down'):'fa-arrow-down'}"
+                                                    class="fa" data-name="creatorId" aria-hidden="true"></i></a></th>
+                                    <th >
+                                        <a title="按创建日期排序" th:classappend="${prodMixFileVO.sort=='create_time'?'active':''}">创建日期&nbsp;<i th:attr="data-value=${prodMixFileVO.sort=='create_time'?(prodMixFileVO.order=='desc'?'asc':'desc'):'desc'}"
+                                                   th:classappend="${prodMixFileVO.sort=='create_time'?(prodMixFileVO.order=='desc'?'fa-arrow-up':'fa-arrow-down'):'fa-arrow-down'}"
+                                                   class="fa" data-name="create_time" aria-hidden="true"></i></a></th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:if="${!#lists.isEmpty(prodMixList)}" th:each="prod,prodStr:${prodMixList}">
+                                    <td th:text="${prodStr.index+1}"></td>
+                                    <td ><a  th:href="${'/prod/list?parentId='+prod.id}" th:utext="${prod.prodMixName}"></a></td>
+                                    <td th:utext="${prod.content}">1</td>
+                                    <td th:utext="${prod.userName}">1</td>
+                                    <td th:text="${#dates.format(prod.createTime,'yyyy-MM-dd HH:mm')}">1</td>
+                                    <td>
+                                        <a th:href="${'/prod/list?parentId='+prod.id}" class="btn btn-warning">分解</a>
+                                        <a th:attr="data-id=${prod.id}" class="btn btn-success">编辑</a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div th:if="${#lists.isEmpty(prodMixList)}" class="text-center">
+                            <span >暂无数据</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--添加的model-->
+    <div class="modal fade" id="prodMix_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+
+        <div class="modal-dialog">
+            <div class="modal-content" >
+                <div class="modal-body" >
+                    <div class="panel panel-default" style="margin-bottom: 0">
+                        <div class="panel-heading">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title" >添加产品结构</h4>
+                        </div>
+                        <div class="panel-body" >
+                            <form class="form-horizontal" action="">
+
+                                <div class="form-group">
+                                    <label class="col-lg-2 control-label" >结构名称:</label>
+                                    <div class="col-lg-10">
+                                        <input type="text" id="prodMixName" name="prodMixName" class="form-control" >
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-lg-2 control-label" >描述:</label>
+
+                                    <div class="col-lg-10">
+                                        <textarea title="描述" name="content" id= "content" class="form-control"
+                                                   rows="6"></textarea>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-lg-2 control-label" >父级结构:</label>
+                                    <div class="col-lg-10">
+                                        <input type="text" readonly="readonly" id="parent_id" class="form-control"
+                                               th:value="${prodMix!=null?prodMix.prodMixName:''}"
+                                               th:attr="data-id=${prodMix!=null?prodMix.id:0}">
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="modal-footer" >
+                        <button type="button" data-dismiss="modal" class="btn">关闭</button>
+                        <button type="button" id="save_prodMix" class="btn btn-primary">确认</button>
+                    </div>
+                </div><!-- /.modal-body -->
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+    <!--修改的model-->
+    <div class="modal fade" id="prodMix_modify_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+
+        <div class="modal-dialog">
+            <div class="modal-content" >
+                <div class="modal-body" >
+                    <div class="panel panel-default" style="margin-bottom: 0">
+                        <div class="panel-heading">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title" >修改产品结构</h4>
+                        </div>
+                        <div class="panel-body" >
+                            <form class="form-horizontal" action="">
+
+                                <div class="form-group">
+                                    <label class="col-lg-2 control-label" >结构名称:</label>
+                                    <div class="col-lg-10">
+                                        <input type="text" id="modify_prodMixName" class="form-control"  >
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-lg-2 control-label" >描述:</label>
+                                    <div class="col-lg-10">
+                                         <textarea title="描述" id="modify_content" class="form-control"
+                                                  rows="6"></textarea>
+
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-lg-2 control-label" >父级结构:</label>
+                                    <div class="col-lg-10">
+                                        <input type="text" readonly="readonly" id="modify_parent_id" class="form-control"
+                                               th:value="${prodMix!=null?prodMix.prodMixName:''}"
+                                               th:attr="data-id=${prodMix!=null?prodMix.id:0}">
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="modal-footer" >
+                        <button type="button" data-dismiss="modal" class="btn">关闭</button>
+                        <button type="button" id="save_modify_prodMix" class="btn btn-primary">修改</button>
+                    </div>
+                </div><!-- /.modal-body -->
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+    <script th:inline="javascript" >
+        /*[+
+         var prodMixFileVO=[[${prodMixFileVO}]];
+         +]*/
+    </script>
+    <div th:include="/tpls/plane-template::footer" th:remove="tag"></div>
+    <script type="text/javascript">
+        $(function(){
+            $('#plane-list').children().removeClass('active').eq(3).addClass('active');
+
+            $('#open_prodMix').click(function(){
+                $('#prodMix_modal').modal('show');
+            });
+
+            var prodMix={
+                id:'',
+                prodMixName:'',
+                content:'',
+                parentId:''
+            };
+            $('#save_prodMix').click(function(){
+                prodMix.prodMixName=$('#prodMixName').val();
+                prodMix.content=$('#content').val();
+                prodMix.parentId=$('#parent_id').attr('data-id');
+                if(prodMix.prodMixName.length==0){
+                    alert('产品结构不能为空');
+                    return
+                }
+                if(prodMix.content.length==0){
+                    alert('描述不能为空');
+                    return
+                }
+                $.ajax({
+                    url:'/prod/add',
+                    data:prodMix,
+                    success:function(data){
+                        if(data.success){
+                            alert('添加成功');
+                            window.location.href='/prod/list'+prodMix.parentId!=null?'?parentId='+prodMix.parentId:'';
+                            return;
+                        }
+                        if(data.code==-2){
+                            alert('存在相同的标题');
+                            return
+                        }
+                        alert('添加失败');
+                    }
+                })
+            });
+
+            $('table').find('tr').find('td:last').find('a:eq(1)').click(function(){
+                $('#modify_prodMixName').val($(this).parent().parent().find('td:eq(1)').find('a').text());
+                $('#modify_content').val($(this).parent().parent().find('td:eq(2)').text());
+                prodMix.id=$(this).attr('data-id');
+                $('#prodMix_modify_modal').modal('show');
+            });
+
+            var urlTrans=function(key,value){
+                if (value != null && value.length != 0 && value != 'null') {
+                    return '&'+key+'='+value;
+                }
+                return '';
+            };
+            $('table').find('tr th').find('i').parent().click(function(){
+
+                window.location.href="/prod/list?parentId="+prodMixFileVO.parentId+
+                    urlTrans('queryProdMixName',prodMixFileVO.queryProdMixName)+
+                    urlTrans('order',$(this).children().attr('data-value'))+
+                    urlTrans('sort',$(this).children().attr('data-name'));
+            });
+
+            $('#save_modify_prodMix').click(function(){
+                prodMix.prodMixName=$('#modify_prodMixName').val();
+                prodMix.content=$('#modify_content').val();
+                prodMix.parentId=$('#parent_id').attr('data-id');
+                if(prodMix.prodMixName.length==0){
+                    alert('产品结构不能为空');
+                    return
+                }
+                if(prodMix.content.length==0){
+                    alert('描述不能为空');
+                    return
+                }
+                $.ajax({
+                    url:'/prod/update',
+                    data:prodMix,
+                    success:function(data){
+                        if(data.success){
+                            alert('修改成功');
+                            window.location.href='/prod/list'+prodMix.parentId!=null?'?parentId='+prodMix.parentId:'';
+                            return;
+                        }
+                        if(data.code==-2){
+                            alert('存在相同的标题');
+                            return;
+                        }
+                        alert('修改失败');
+                    }
+                })
+            })
+
+
+        })
+    </script>
+</body>
+
+</html>

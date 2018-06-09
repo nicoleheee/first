@@ -1,0 +1,47 @@
+body{
+    padding-top: 70px;
+}
+.main-wrapper{
+    min-height: 500px;
+}
+.opt-item-vertical{
+    border-bottom: 1px solid #aaa;
+    margin-bottom: 10px;
+}
+.big-brief-item{
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding: 15px;
+    background-color: #2f6881;
+    color: white;
+}
+.big-brief-item .big-text{
+    font-size: 40px;
+    font-weight: 700;
+}
+
+.money{
+    color: #fc7014;
+    font-size: 20px;
+    font-weight: 700;
+    border:1px solid #fc7014;
+    padding: 5px 10px;
+    border-radius: 20px;
+}
+
+.little-select-item{
+    border:1px solid #aaa;
+    border-radius: 5px;
+    padding: 10px;
+    margin-right: 10px;
+    cursor: pointer;
+    display: inline-block;
+    margin-bottom: 5px;
+}
+
+th a{
+    cursor: pointer;
+}
+table th .active{
+    color:#1b75bb;
+}

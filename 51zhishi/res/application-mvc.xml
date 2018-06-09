@@ -1,0 +1,231 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+						http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+						http://www.springframework.org/schema/context
+						http://www.springframework.org/schema/context/spring-context-3.2.xsd
+						http://www.springframework.org/schema/mvc
+						http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd"
+	default-lazy-init="true" default-autowire="byName">
+
+	<!--对于一些静态的资源，默认会启用这个servlethandler来处理（其实就是没有被mvc的controller mapping的路径） -->
+	<mvc:default-servlet-handler/>
+
+	<!-- 1、配置js，css等静态文件直接映射到对应的文件夹，不被DispatcherServlet处理 -->
+	<!-- 对应于应用程序的具体路径和将来url访问的相对路径 -->
+	<!--<mvc:resources mapping="/images/**" location="/images/"-->
+		<!--cache-period="31556926" />-->
+	<!--<mvc:resources mapping="/js/**" location="/js/"-->
+		<!--cache-period="31556926" />-->
+	<!--<mvc:resources mapping="/css/**" location="/css/"-->
+		<!--cache-period="31556926" />-->
+	<!--&lt;!&ndash;<mvc:resources mapping="/fonts/**" location="/fonts/"-->
+		<!--cache-period="31556926" />&ndash;&gt;-->
+	<!--<mvc:resources mapping="/*.html" location="/*.html"-->
+				   <!--cache-period="31556926" />-->
+
+
+	<!--thymeleaf 模板引擎配置-->
+
+	<bean id="emailTemplateResolver" class="org.thymeleaf.templateresolver.ClassLoaderTemplateResolver">
+		<property name="prefix" value="mail/" />
+		<property name="templateMode" value="HTML" />
+		<property name="characterEncoding" value="UTF-8" />
+		<property name="checkExistence" value="true" />
+		<property name="order" value="1" />
+		<!-- Template cache is true by default. Set to false if you want -->
+		<!-- templates to be automatically updated when modified.        -->
+		<property name="cacheable" value="true" />
+	</bean>
+
+
+
+	<!--模板解析器-->
+	<bean id="webTemplateResolver" class="org.thymeleaf.spring3.templateresolver.SpringResourceTemplateResolver">
+		<property name="prefix" value="/WEB-INF/views" />
+		<property name="templateMode" value="HTML" />
+		<property name="characterEncoding" value="utf-8"/>
+		<property name="suffix" value=".html"/>
+		<property name="order" value="2"/>
+	</bean>
+
+	<bean id="templateEngine" class="org.thymeleaf.spring3.SpringTemplateEngine">
+		<property name="templateResolvers">
+			<set>
+				<ref bean="emailTemplateResolver"/>
+				<ref bean="webTemplateResolver" />
+			</set>
+		</property>
+		<!--第三方layout插件-->
+		<property name="additionalDialects">
+			<set>
+				<bean class="nz.net.ultraq.thymeleaf.LayoutDialect"></bean>
+			</set>
+		</property>
+	</bean>
+
+	<bean id="thymeleafViewResolver" class="org.thymeleaf.spring3.view.ThymeleafViewResolver">
+		<property name="templateEngine" ref="templateEngine" />
+		<property name="viewNames" value="/tpls/*"/>
+		<property name="characterEncoding" value="UTF-8" />
+		<property name="order" value="0"/>
+	</bean>
+
+	<!--
+		视图解释类
+		jsp页面解析器，当Controller返回XXX字符串时，先通过拦截器，然后该类就会在/WEB-INF/views/目录下，查找XXX.jsp文件
+	-->
+	<bean id="jspViewResolver"
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<!--2、默认查找view的时候查找的路径 -->
+		<property name="prefix" value="/WEB-INF/views/"/>
+		<property name="suffix" value=".jsp"/> <!--可为空,方便实现自已的依据扩展名来选择视图解释类的逻辑-->
+		<property name="order" value="1"/>
+	</bean>
+
+
+
+	<!--格式化工具配置-->
+	<bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+		<property name="formatters">
+			<set>
+				<bean class="com.plane.web.conversion.DateFormatter" />
+			</set>
+		</property>
+	</bean>
+	<!-- 启动扫描所有的controller -->
+	<!--3、修改spring搜索类的起始包（搜索注解的内容和包里的配置文件等） -->
+	<context:component-scan base-package="com.plane" />
+
+	<!-- 启动Spring MVC的注解功能，完成请求和注解POJO的映射 -->
+	<!--必须在viewresolver配置前配置此内容-->
+	<mvc:annotation-driven conversion-service="conversionService">
+		<mvc:argument-resolvers>
+			<bean class="com.plane.web.resolver.UserSessionArgumentResolver"/>
+			<!--<bean class="com.i51zhishi.web.resolver.AdminArgumentResolver"/>-->
+			<bean class="com.plane.web.resolver.StringArrayTokenArgumentResolver"/>
+		</mvc:argument-resolvers>
+	</mvc:annotation-driven>
+	<!--
+		默认的注解映射的支持 主要作用于@Controller，激活该模式
+		这是一种简写形式，完全可以手动配置替代这种简写形式，简写形式可以让初学都快速应用默认配置方案。
+		会自动注册DefaultAnnotationHandlerMapping与AnnotationMethodHandlerAdapter
+		两个bean,是spring MVC为@Controllers分发请求所必须的
+	-->
+
+	<bean
+		class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+		<property name="cacheSeconds" value="0" />
+
+		<!-- 处理字符编码问题 -->
+		<property name="messageConverters">
+			<list>
+				<bean
+					class="org.springframework.http.converter.StringHttpMessageConverter">
+					<property name="supportedMediaTypes">
+						<list>
+							<value>text/html;charset=UTF-8</value>
+						</list>
+					</property>
+				</bean>
+				<ref bean="mappingJacksonHttpMessageConverter" />
+			</list>
+		</property>
+		<!-- 自定义对象注入，处理session中用户对象信息获取 -->
+		<!--<property name="customArgumentResolvers">
+			<list>
+				<bean class="com.potevio.web.UserArgumentResolver"></bean>
+			</list>
+		</property>-->
+
+	</bean>
+
+	<!-- 启用Json输出集成 -->
+	<bean id="mappingJacksonHttpMessageConverter"
+		class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+
+		<property name="supportedMediaTypes">
+			<list>
+			<value>application/json;charset=UTF-8</value>
+			</list>
+		</property>
+		<property name="objectMapper">
+			<bean class="org.springframework.http.converter.json.Jackson2ObjectMapperFactoryBean">
+				<property name="failOnEmptyBeans" value="false"/>
+
+
+			</bean>
+		</property>
+	</bean>
+
+	<!--邮件线程池配置-->
+
+	<bean id="mailTaskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+		<property name="corePoolSize" value="5"/>
+		<property name="maxPoolSize" value="10"/>
+		<property name="queueCapacity" value="25"/>
+		<property name="keepAliveSeconds" value="5"/>
+	</bean>
+	<!--短信发送线程池-->
+	<bean id="smsTaskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+		<property name="corePoolSize" value="5"/>
+		<property name="maxPoolSize" value="10"/>
+		<property name="queueCapacity" value="25"/>
+		<property name="keepAliveSeconds" value="5"/>
+	</bean>
+
+	<!--邮件发送服务-->
+	<bean id="sendMail" class="com.plane.backservice.EmailSenderThread" lazy-init="false" scope="singleton">
+		<property name="enableSSL" value="true"/>
+		<property name="smtpHost" value="${mail.stmp}"/>
+		<property name="smtpPort" value="${mail.smtpPort}"/>
+		<property name="userName" value="${mail.username}"/>
+		<property name="password" value="${mail.password}"/>
+		<property name="mailFromEmail" value="${mail.senderEmail}"/>
+		<property name="mailFromName" value="${mail.sender}"/>
+
+	</bean>
+
+	<!--全局配置拦截器-->
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/**"/>
+			<mvc:exclude-mapping path="/*"/>
+			<mvc:exclude-mapping path="/search/product"/>
+			<mvc:exclude-mapping path="/discuss/homeStatus/*"/>
+			<mvc:exclude-mapping path="/file/img/**"/>
+			<mvc:exclude-mapping path="/favicon.ico"/>
+			<mvc:exclude-mapping path="/js/**"/>
+			<mvc:exclude-mapping path="/css/**"/>
+			<mvc:exclude-mapping path="/fonts/**"/>
+			<mvc:exclude-mapping path="/framework/**"/>
+			<mvc:exclude-mapping path="/image/**"/>
+			<!--&lt;!&ndash;对于注册和登录请求不需要验证登录，所以排除在LoginInterceptor的拦截外
+			 登录 /auth/login
+			 注册 /auth/regist
+			 &ndash;&gt;-->
+			<mvc:exclude-mapping path="/auth/**"/>
+			<bean id="loginInterceptor" class="com.plane.web.interceptor.UserInterceptor">
+			</bean>
+		</mvc:interceptor>
+
+		<!--&lt;!&ndash;添加admin拦截器&ndash;&gt;
+		<mvc:interceptor>
+
+			<mvc:mapping path="/admin/**"/>
+			<bean id="adminInterceptor" class="com.i51zhishi.web.interceptor.AdminInterceptor">
+			</bean>
+
+		</mvc:interceptor>-->
+
+	</mvc:interceptors>
+	<!-- 文件上传 -->
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver" >
+		<!--文件最大5M字节-->
+		<property name="maxUploadSize" value="5000000" />
+	</bean>
+</beans>

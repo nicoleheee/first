@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.plane.mapper.user.UserMapper">
+
+    <!--插入用户数据-->
+    <insert id="insertUser" parameterType="user">
+        <selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">
+            SELECT LAST_INSERT_ID() AS id
+        </selectKey>
+        INSERT INTO t_user(user_name,pass_word,email)
+        VALUES(#{userName},#{passWord},#{email})
+    </insert>
+
+    <!--查询所有用户-->
+    <select id="queryAllUser" resultType="user" parameterType="com.plane.web.vo.user.UserFileVO">
+        SELECT u.id,u.user_name,u.email,u.pass_word,u.create_time
+        FROM t_user u WHERE u.state=0
+        <if test="queryUserName!=null and queryUserName!=''">
+            and u.user_name like concat('%',#{queryUserName},'%')
+        </if>
+        <if test="queryEmail!=null and queryEmail!=''">
+            and u.email like concat('%',#{queryEmail},'%')
+        </if>
+        <if test="sort!=null and sort!=''">
+            ORDER by u.${sort} ${order}
+        </if>
+        <if test="sort==null or sort==''">
+            ORDER by u.create_time desc
+        </if>
+    </select>
+
+    <!--查询用户是否存在-->
+    <select id="queryIdByUserName" parameterType="user" resultType="java.lang.Long">
+        SELECT id FROM t_user  WHERE user_name=#{userName} AND state=0
+        <if test="id!='' and id!=null">
+            AND id!=#{id}
+        </if>
+    </select>
+
+    <select id="queryIdByEmail" parameterType="user" resultType="java.lang.Long">
+        SELECT id FROM t_user WHERE email=#{email} AND state=0
+        <if test="id!='' and id!=null">
+            AND id!=#{id}
+        </if>
+    </select>
+
+    <!--查询指定id的用户数据-->
+    <select id="queryUserById" resultType="user" parameterType="Long">
+        SELECT u.id,u.user_name,u.email,u.create_time
+        FROM t_user u
+        WHERE u.id=#{id} AND u.state=0
+    </select>
+
+    <!--修改指定id的用户数据-->
+    <update id="updateUser" parameterType="user">
+        UPDATE t_user set user_name=#{userName},email=#{email}
+        WHERE id = #{id} AND state = 0
+    </update>
+
+    <!--删除指定id的用户数据-->
+    <update id="updateStateUserById" parameterType="Long" >
+        UPDATE t_user SET state=1
+        where id=#{id}
+    </update>
+
+    <!--重置指定id的用户密码-->
+    <update id="updatePassWordById" parameterType="user">
+        UPDATE t_user SET pass_word=#{passWord}
+        WHERE id=#{id} AND state = 0
+    </update>
+
+
+</mapper>

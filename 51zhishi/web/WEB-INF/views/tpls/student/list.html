@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:text-align="http://www.w3.org/1999/xhtml">
 <head th:include="/tpls/plane-template::header('首页')">
     <i th:fragment="top">
         <script src="/framework/jquery.js"></script>
@@ -9,19 +9,84 @@
 </head>
 <body>
    <div th:include="/tpls/plane-template::top_menu" th:remove="tag"></div>
-   <table class="table">
-       <tr>
-              <th>id</th>
-              <th>name</th>
-              <th>age</th>
-              <th>sex</th>
-       </tr>
-       <tr th:each="stu:${studentList}">
-           <td th:text="${stu.id}"></td>
-           <td th:text="${stu.name}"></td>
-           <td th:text="${stu.age}"></td>
-           <td th:text="${stu.sex}"></td>
-       </tr>
-   </table>
+      <div class="row">
+          <div class="col-lg-8 col-lg-offset-2">
+              <a class="btn btn-primary" style="margin-bottom:10px" id="addStudent">
+                  <i class="fa fa-edit"></i>添加学生
+              </a>
+              <div class="panel panel-success">
+                  <div class="panel-heading" style="text-align:center">
+                      学生列表
+                  </div>
+                  <div class="panel-body">
+                      <table class="table">
+                          <tr>
+                              <th>id</th>
+                              <th>name</th>
+                              <th>age</th>
+                              <th>sex</th>
+                              <th>操作</th>
+                          </tr>
+                          <tr th:if="${list!=null && list.size()>0}" th:each="stu:${list}">
+                              <td th:text="${stu.id}"></td>
+                              <td th:text="${stu.name}"></td>
+                              <td th:text="${stu.age}"></td>
+                              <td th:text="${stu.sex}"></td>
+                              <td>
+                                  <a th:editId="${stu.id}">编辑</a>
+                                  <a name="del_stu" th:stuId="${stu.id}">删除</a>
+                              </td>
+                          </tr>
+                      </table>
+                      <div th:if="${list==null || list.size()==0}" style="text-align:center">
+                          暂无数据
+                      </div>
+                  <div id="pageList">
+                      <ul class="pagination">
+                          <li th:each="page:${pageList}"th:class="${page==pageNo?'active':''}">
+                              <a th:href="${'/list?pageNo='+page}" th:text="${page}">1</a>
+                          </li>
+                      </ul>
+                  </div>
+                  </div>
+          </div>
+
+      </div>
+
+   </div>
+   <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+       <div class="modal-dialog">
+           <div class="modal-content">
+               <div class="modal-header">
+                   <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                   <h4 class="modal-title" id="myModalLabel">添加新学生</h4>
+               </div>
+               <div class="modal-body">
+                   <table class="table">
+                       <tr>
+                           <td>name：</td>
+                           <td><input type="text" class="form-control" id="student_name"></td>
+                       </tr>
+                       <tr>
+                           <td>age：</td>
+                           <td><input type="text" class="form-control" id="student_age"></td>
+                       </tr>
+                       <tr>
+                           <td>sex：</td>
+                           <td><input type="radio" name="sex" value="male">male
+                               <input type="radio" name="sex" value="female">female
+                           </td>
+                       </tr>
+                   </table>
+               </div>
+               <div class="modal-footer">
+                   <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                   <button type="button" class="btn btn-primary" id="sub">确定</button>
+               </div>
+           </div><!-- /.modal-content -->
+       </div><!-- /.modal -->
+   </div>
+
 </body>
+<script type="text/javascript" th:src="@{/js/student/list.js?v=1.0.1}"></script>
 </html>

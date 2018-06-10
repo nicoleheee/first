@@ -13,4 +13,8 @@ public interface StudentService {
     void deleteStudentById(Integer id);
 
     List<Student> selectStudent();
+
+    List<Student> queryStudent(int begin, int pageSize);
+
+    int getTotStudentCount();
 }

@@ -41,5 +41,15 @@ public class StudentServiceImpl implements StudentService {
     public List<Student> selectStudent(){
         return studentMapper.selectStudent();
     }
+    @Override
+    public List<Student> queryStudent(int begin, int pageSize){
+        return studentMapper.queryStudent(begin,pageSize);
+    }
+    @Override
+    public int getTotStudentCount(){
+        return studentMapper.getTotStudentCount();
+    }
+
+
 
 }

@@ -4,7 +4,7 @@
 <mapper namespace="com.plane.mapper.StudentMapper">
 
 
-    <insert id="addStudent">
+    <insert id="addStudent" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
       insert into t_stu(name,age,sex)
       value(#{name},#{age},#{sex})
     </insert>
@@ -31,5 +31,12 @@
       select * from t_stu where 1=1
     </select>
 
+    <select id="queryStudent" resultType="student">
+      select * from t_stu where 1=1 order by id limit #{begin}, #{pageSize}
+    </select>
+
+    <select id="getTotStudentCount" resultType="int">
+      select count(id) from t_stu where 1=1
+    </select>
 
 </mapper>

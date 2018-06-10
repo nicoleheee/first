@@ -18,5 +18,10 @@ public interface StudentMapper {
 
     List<Student> selectStudent();
 
+    List<Student> queryStudent(@Param("begin") int begin,
+                               @Param("pageSize") int pageSize);
+    //声明
+
+    int getTotStudentCount();
 
 }
